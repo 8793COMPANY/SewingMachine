@@ -63,13 +63,13 @@
             <ScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:scrollbars="none">
 
-                <LinearLayout
-                    android:id="@+id/list_linear"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/Pixel_Recycler_View"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"></LinearLayout>
+                    android:layout_height="match_parent"/>
 
             </ScrollView>
 

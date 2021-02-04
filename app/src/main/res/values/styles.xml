@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ColorButton">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:onClick">selectColor</item>
+    </style>
+
+    <style name="Pixel">
+        <!-- TODO : 픽셀 사이즈 조정 -->
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginLeft">1dp</item>
+        <item name="android:onClick">changeColor</item>
+        <item name="background">@color/white</item>
+    </style>
+</resources>

@@ -1,12 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
 
-    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="새로운 자수 만들기 페이지입니다."
-        android:gravity="center"></TextView>
+        android:layout_height="120dp"
+        android:gravity="center">
+
+        <!-- 미니맵 -->
+        <ImageView
+            android:id="@+id/mini_map"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="5dp"/>
+
+    </LinearLayout>
+
+    <!-- 캔버스 -->
+    <ScrollView
+        android:id="@+id/pll1"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="150dp"
+        android:layout_gravity="center"
+        android:layout_weight="1">
+
+        <HorizontalScrollView
+            android:id="@+id/pll2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/paper_linear_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:orientation="vertical">
+
+                <include layout="@layout/paper_line" />
+                <include layout="@layout/paper_line" />
+                <include layout="@layout/paper_line" />
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+                <include layout="@layout/paper_line" />
+                <include layout="@layout/paper_line" />
+                <include layout="@layout/paper_line" />
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </ScrollView>
+
+    <!-- 팔레트 -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/canvas" />
+
+    </HorizontalScrollView>
 
 </LinearLayout>

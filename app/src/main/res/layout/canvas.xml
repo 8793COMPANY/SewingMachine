@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/palette_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/color_button_black"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_eclipse"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_grey"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_silver"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_white"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_red"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_vermilion"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_orange"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_amber"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_yellow"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_lime"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_chartreuse"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_harlequin"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_green"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_malachite"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_mint"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_turquoise"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_cyan"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_sky_blue"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_azure"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_sapphire"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_blue"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_indigo"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_purple"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_lt_purple"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_magenta"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_fuchsia"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_rose"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_carmine"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+</LinearLayout>

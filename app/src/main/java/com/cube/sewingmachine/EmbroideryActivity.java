@@ -1,5 +1,6 @@
 package com.cube.sewingmachine;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -13,8 +14,16 @@ import android.widget.ScrollView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class EmbroideryActivity extends AppCompatActivity {
+    Context context;
+
+    RecyclerView Pixel_Recycler_View;
+    PixelAdapter pixelAdapter;
+
+    int[] dataSet;
 
     Button create_btn, modify_btn, start_btn;
     ScrollView scrollView;
@@ -32,7 +41,23 @@ public class EmbroideryActivity extends AppCompatActivity {
         modify_btn = findViewById(R.id.modify_btn);
         start_btn = findViewById(R.id.start_btn);
 
-        list_linear = findViewById(R.id.list_linear);
+        dataSet = new int[]{
+                R.color.grey, R.color.grey, R.color.grey,
+                R.color.grey, R.color.grey, R.color.grey,
+                R.color.grey, R.color.grey, R.color.grey,
+                R.color.grey, R.color.grey, R.color.grey,
+                R.color.grey, R.color.grey, R.color.grey,
+                R.color.grey, R.color.grey, R.color.grey,
+                R.color.grey, R.color.grey, R.color.grey,
+        };
+
+        Pixel_Recycler_View = findViewById(R.id.Pixel_Recycler_View);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context, 3);
+        Pixel_Recycler_View.setLayoutManager(layoutManager);
+        pixelAdapter = new PixelAdapter(dataSet);
+        // 온 클릭 등록좀
+        //Pixel_Recycler_View.addItemDecoration(new ItemDecoration(this));
+        Pixel_Recycler_View.setAdapter(pixelAdapter);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -40,7 +65,7 @@ public class EmbroideryActivity extends AppCompatActivity {
         viewPixcel = (displayMetrics.widthPixels / 720) *24;
 
 
-        drawLinear(list_linear);
+        /*drawLinear(list_linear);
         drawColumnView(list_linear);
 
         drawLinear(list_linear);
@@ -53,7 +78,7 @@ public class EmbroideryActivity extends AppCompatActivity {
         drawColumnView(list_linear);
 
         drawLinear(list_linear);
-        drawColumnView(list_linear);
+        drawColumnView(list_linear);*/
 
 
 
@@ -61,7 +86,7 @@ public class EmbroideryActivity extends AppCompatActivity {
         create_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EmbroideryActivity.this, CreateActivity.class);
+                Intent intent = new Intent(EmbroideryActivity.this, StartEmbroidActivity.class);
                 startActivity(intent);
             }
         });
@@ -69,7 +94,7 @@ public class EmbroideryActivity extends AppCompatActivity {
         modify_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EmbroideryActivity.this, CreateActivity.class);
+                Intent intent = new Intent(EmbroideryActivity.this, StartEmbroidActivity.class);
                 startActivity(intent);
             }
         });
@@ -77,7 +102,7 @@ public class EmbroideryActivity extends AppCompatActivity {
         start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EmbroideryActivity.this, CreateActivity.class);
+                Intent intent = new Intent(EmbroideryActivity.this, StartEmbroidActivity.class);
                 startActivity(intent);
             }
         });
