@@ -83,13 +83,13 @@
             android:orientation="vertical"
             android:weightSum="734">
 
-            <LinearLayout
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/start_embroidery"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="160"
                 android:orientation="horizontal"
-                android:background="@drawable/start_embroidery"></LinearLayout>
+                android:background="@drawable/start_embroidery"></androidx.appcompat.widget.AppCompatButton>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -97,39 +97,39 @@
                 android:layout_weight="20"
                 ></LinearLayout>
 
-            <LinearLayout
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/start_sewing"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="160"
-                android:background="@drawable/start_sewing"></LinearLayout>
+                android:background="@drawable/start_sewing"></androidx.appcompat.widget.AppCompatButton>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="20"></LinearLayout>
 
-            <LinearLayout
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/create_new"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="160"
-                android:background="@drawable/create_new"></LinearLayout>
+                android:background="@drawable/create_new"></androidx.appcompat.widget.AppCompatButton>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="20"></LinearLayout>
 
-            <LinearLayout
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/setting"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="160"
-                android:background="@drawable/setting"></LinearLayout>
+                android:background="@drawable/setting"></androidx.appcompat.widget.AppCompatButton>
 
             <LinearLayout
                 android:layout_width="match_parent"
