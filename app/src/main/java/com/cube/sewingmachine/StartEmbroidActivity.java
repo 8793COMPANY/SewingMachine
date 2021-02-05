@@ -193,11 +193,11 @@ public class StartEmbroidActivity extends AppCompatActivity {
             }
 
             FileWriter fileWriter = new FileWriter(saveFile);
-            fileWriter.append("8\n8\n");
+            fileWriter.append("13\n13\n");
 
             LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
+            for (int i = 0; i < 13; i++) {
+                for (int j = 0; j < 13; j++) {
                     View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
                     int color = ((ColorDrawable) v.getBackground()).getColor();
                     fileWriter.append(String.valueOf(color));
@@ -258,69 +258,59 @@ public class StartEmbroidActivity extends AppCompatActivity {
 
     private void initPalette() {
         colorButtons = new Button[]{
-                findViewById(R.id.color_button_black),
-                findViewById(R.id.color_button_eclipse),
-                findViewById(R.id.color_button_grey),
-                findViewById(R.id.color_button_silver),
                 findViewById(R.id.color_button_white),
+                findViewById(R.id.color_button_black),
+                findViewById(R.id.color_button_grey),
 
                 findViewById(R.id.color_button_red),
-                findViewById(R.id.color_button_vermilion),
                 findViewById(R.id.color_button_orange),
                 findViewById(R.id.color_button_amber),
                 findViewById(R.id.color_button_yellow),
                 findViewById(R.id.color_button_lime),
-                findViewById(R.id.color_button_chartreuse),
-                findViewById(R.id.color_button_harlequin),
-                findViewById(R.id.color_button_green),
                 findViewById(R.id.color_button_malachite),
-                findViewById(R.id.color_button_mint),
-                findViewById(R.id.color_button_turquoise),
-                findViewById(R.id.color_button_cyan),
                 findViewById(R.id.color_button_sky_blue),
-                findViewById(R.id.color_button_azure),
-                findViewById(R.id.color_button_sapphire),
                 findViewById(R.id.color_button_blue),
                 findViewById(R.id.color_button_indigo),
-                findViewById(R.id.color_button_purple),
-                findViewById(R.id.color_button_lt_purple),
-                findViewById(R.id.color_button_magenta),
                 findViewById(R.id.color_button_fuchsia),
-                findViewById(R.id.color_button_rose),
-                findViewById(R.id.color_button_carmine)
+
+                findViewById(R.id.color_button_brown_1),
+                findViewById(R.id.color_button_brown_2),
+                findViewById(R.id.color_button_brown_3),
+                findViewById(R.id.color_button_brown_4),
+                findViewById(R.id.color_button_green_1),
+                findViewById(R.id.color_button_green_2),
+                findViewById(R.id.color_button_blue_1),
+                findViewById(R.id.color_button_blue_2),
+                findViewById(R.id.color_button_purple_1),
+                findViewById(R.id.color_button_purple_2)
         };
 
         colors = new int[]{
-                ContextCompat.getColor(this, R.color.black),
-                ContextCompat.getColor(this, R.color.eclipse),
-                ContextCompat.getColor(this, R.color.grey),
-                ContextCompat.getColor(this, R.color.silver),
                 ContextCompat.getColor(this, R.color.white),
+                ContextCompat.getColor(this, R.color.black),
+                ContextCompat.getColor(this, R.color.grey),
 
                 ContextCompat.getColor(this, R.color.red),
-                ContextCompat.getColor(this, R.color.vermilion),
                 ContextCompat.getColor(this, R.color.orange),
                 ContextCompat.getColor(this, R.color.amber),
                 ContextCompat.getColor(this, R.color.yellow),
                 ContextCompat.getColor(this, R.color.lime),
-                ContextCompat.getColor(this, R.color.chartreuse),
-                ContextCompat.getColor(this, R.color.harlequin),
-                ContextCompat.getColor(this, R.color.green),
                 ContextCompat.getColor(this, R.color.malachite),
-                ContextCompat.getColor(this, R.color.mint),
-                ContextCompat.getColor(this, R.color.turquoise),
-                ContextCompat.getColor(this, R.color.cyan),
                 ContextCompat.getColor(this, R.color.sky_blue),
-                ContextCompat.getColor(this, R.color.azure),
-                ContextCompat.getColor(this, R.color.sapphire),
                 ContextCompat.getColor(this, R.color.blue),
                 ContextCompat.getColor(this, R.color.indigo),
-                ContextCompat.getColor(this, R.color.purple),
-                ContextCompat.getColor(this, R.color.lt_purple),
-                ContextCompat.getColor(this, R.color.magenta),
                 ContextCompat.getColor(this, R.color.fuchsia),
-                ContextCompat.getColor(this, R.color.rose),
-                ContextCompat.getColor(this, R.color.carmine)
+
+                ContextCompat.getColor(this, R.color.brown_1),
+                ContextCompat.getColor(this, R.color.brown_2),
+                ContextCompat.getColor(this, R.color.brown_3),
+                ContextCompat.getColor(this, R.color.brown_4),
+                ContextCompat.getColor(this, R.color.green_1),
+                ContextCompat.getColor(this, R.color.green_2),
+                ContextCompat.getColor(this, R.color.blue_1),
+                ContextCompat.getColor(this, R.color.blue_2),
+                ContextCompat.getColor(this, R.color.purple_1),
+                ContextCompat.getColor(this, R.color.purple_2)
         };
 
         for (int i = 0; i < colorButtons.length; i++) {
@@ -533,24 +523,57 @@ public class StartEmbroidActivity extends AppCompatActivity {
 
     //On click method that selects the current color based on the palette button pressed
     public void selectColor(View v) {
+        LinearLayout paintCase = findViewById(R.id.palette_linear_layout);
+
+        int[] drawables = new int[]{
+                R.drawable.white,
+                R.drawable.black,
+                R.drawable.grey,
+
+                R.drawable.red,
+                R.drawable.orange,
+                R.drawable.amber,
+                R.drawable.yellow,
+                R.drawable.lime,
+                R.drawable.malachite,
+                R.drawable.sky_blue,
+                R.drawable.blue,
+                R.drawable.indigo,
+                R.drawable.fuchsia,
+
+                R.drawable.brown_1,
+                R.drawable.brown_2,
+                R.drawable.brown_3,
+                R.drawable.brown_4,
+                R.drawable.green_1,
+                R.drawable.green_2,
+                R.drawable.blue_1,
+                R.drawable.blue_2,
+                R.drawable.purple_1,
+                R.drawable.purple_2,
+        };
+
         int i = 0;
 
         for (Button b : colorButtons) {
             if (v.getId() == b.getId()) {
+                //
                 break;
             }
 
             i += 1;
         }
 
+
         selectColor(colors[i]);
+        paintCase.setBackgroundResource(drawables[i]);
     }
 
     //Sets the current color based on the "color" argument
     public void selectColor(int color) {
         currentColor = color;
 
-        findViewById(R.id.palette_linear_layout).setBackgroundColor(currentColor);
+        updateDrawerHeader();
     }
 
     //Onclick method that changes the color of a single "pixel"
