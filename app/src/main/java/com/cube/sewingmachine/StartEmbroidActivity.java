@@ -33,6 +33,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -56,6 +57,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -69,6 +71,8 @@ public class StartEmbroidActivity extends AppCompatActivity {
     private Button colorButtons[];
     private int colors[];
     private ActionBarDrawerToggle drawerToggle;
+    AppCompatButton back_btn;
+    ImageButton factory_reset, save_btn;
     private SharedPreferences settings;
     private boolean grid;
 
@@ -97,6 +101,11 @@ public class StartEmbroidActivity extends AppCompatActivity {
 
         settings = getPreferences(0);
         pixelGrid(true);
+
+        // TODO : 버튼 온클릭 만들기
+        factory_reset = findViewById(R.id.factory_reset);
+        save_btn = findViewById(R.id.save_btn);
+        back_btn = findViewById(R.id.back_btn);
 
         // 프리셋 테스트
         fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
