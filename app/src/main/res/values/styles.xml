@@ -16,4 +16,8 @@
         <item name="android:onClick">changeColor</item>
         <item name="background">@color/white</item>
     </style>
+
+    <style name="CustomAppTheme" parent="Theme.AppCompat">
+        <item name="colorAccent">#e91e63</item>
+    </style>
 </resources>

@@ -42,6 +42,8 @@
     <color name="rose">#ff0080</color>       <!-- RGB: 255 | 0   | 128 \/\/ HSL: 220 | 240 | 120 -->
     <color name="carmine">#ff0040</color>    <!-- RGB: 255 | 0   | 64  \/\/ HSL: 230 | 240 | 120 -->
 
+    <color name="ad_color">#f2f2f2</color>
+
     <!-- 75% LUMINESCENCE (TO BE IMPLEMENTED WHEN WE ADD SUPPORT FOR A SECOND ROW / MULTIPLE ROWS) -->
     <!--color name="coral">#ff8080</color-->      <!-- RGB: 255 | 128 | 128 \/\/ HSL: 0   | 240 | 180 -->
     <!--color name="emerald">#80ff80</color-->    <!-- RGB: 128 | 255 | 128 \/\/ HSL: 80  | 240 | 180 -->

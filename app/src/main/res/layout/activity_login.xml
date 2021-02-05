@@ -25,6 +25,7 @@
             android:orientation="horizontal"
             android:weightSum="360">
 
+
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -45,181 +46,194 @@
         </LinearLayout>
 
 
-
     <LinearLayout
+        android:id="@+id/login_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="142"></LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="80"
-        android:orientation="horizontal"
-        android:weightSum="720">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="130"></View>
-
-
+        android:layout_weight="864"
+        android:orientation="vertical"
+        android:weightSum="864">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="460"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="142"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="80"
             android:orientation="horizontal"
-            android:weightSum="460"
-            android:background="@drawable/device_num_input_box">
+            android:weightSum="720">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="130"></View>
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="460"
+                android:orientation="horizontal"
+                android:weightSum="460"
+                android:background="@drawable/device_num_input_box">
+
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="20"></View>
+
+                <EditText
+                    android:id="@+id/device_input"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="370"
+                    android:background="#00000000"
+                    android:textSize="12sp"
+                    android:hint="기기번호를 입력해주세요."></EditText>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="32"
+                    android:orientation="vertical"
+                    android:weightSum="80">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="24"></View>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:visibility="invisible"
+                        android:id="@+id/input_cancel"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="32"
+                        android:background="@drawable/device_num_input_cancel_btn"></androidx.appcompat.widget.AppCompatButton>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="24"></View>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="38"></View>
+
+            </LinearLayout>
+
 
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="20"></View>
+                android:layout_weight="130"></View>
 
-            <EditText
-                android:id="@+id/device_input"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="24"></LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="34"
+            android:orientation="horizontal"
+            android:weightSum="720">
+
+            <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="370"
-                android:background="#00000000"
-                android:textSize="12sp"
-                android:hint="기기번호를 입력해주세요."></EditText>
+                android:layout_weight="148"></View>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/auto_login_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:background="@drawable/auto_login_btn_off"></androidx.appcompat.widget.AppCompatButton>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="14"></View>
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="124"
+                android:background="@drawable/auto_login_text"></ImageView>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="404"></View>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="44"></LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="100"
+            android:orientation="horizontal"
+            android:weightSum="720">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="130"></View>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="32"
+                android:layout_weight="460"
                 android:orientation="vertical"
-                android:weightSum="80">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="24"></View>
+                android:weightSum="90"
+                >
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:visibility="invisible"
-                    android:id="@+id/input_cancel"
+                    android:id="@+id/login_btn"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="32"
-                    android:background="@drawable/device_num_input_cancel_btn"></androidx.appcompat.widget.AppCompatButton>
+                    android:layout_weight="80"
+                    android:background="@drawable/login_btn"
+                    android:elevation="10dp"></androidx.appcompat.widget.AppCompatButton>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="24"></View>
             </LinearLayout>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="38"></View>
+                android:layout_weight="130"></View>
+
 
         </LinearLayout>
-
-
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="130"></View>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="24"></LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="34"
-        android:orientation="horizontal"
-        android:weightSum="720">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="148"></View>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/auto_login_btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="30"
-            android:background="@drawable/auto_login_btn_off"></androidx.appcompat.widget.AppCompatButton>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="14"></View>
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="124"
-            android:background="@drawable/auto_login_text"></ImageView>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="404"></View>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="44"></LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="90"
-        android:orientation="horizontal"
-        android:weightSum="720">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="130"></View>
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="460"
-            android:orientation="vertical"
-            android:weightSum="90"
-            android:background="@drawable/login_btn">
-
-            <Button
-                android:id="@+id/login_btn"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="80"
-                android:background="#00000000"></Button>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="130"></View>
-
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="450"></LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="450"></LinearLayout>
+
+
 
 
 </LinearLayout>

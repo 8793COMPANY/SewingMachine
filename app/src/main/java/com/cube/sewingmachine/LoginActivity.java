@@ -26,7 +26,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        overridePendingTransition(0,0);
 
+        View linearLayout=findViewById(R.id.login_container);
+        Animation animation= AnimationUtils.loadAnimation(this,android.R.anim.fade_in);
+        linearLayout.startAnimation(animation);
 
         login_btn = findViewById(R.id.login_btn);
         auto_login_btn = findViewById(R.id.auto_login_btn);

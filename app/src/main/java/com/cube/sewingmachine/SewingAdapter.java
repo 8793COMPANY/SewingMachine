@@ -18,8 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class SewingAdapter extends RecyclerView.Adapter<SewingAdapter.ViewHolder> {
-    private ArrayList<Integer> mData = null ;
+    private ArrayList<Integer> mData = new ArrayList<>() ;
     int deviceWidth;
+    int [] image_list_off = {R.drawable.sewing_one_image, R.drawable.sewing_two_image, R.drawable.sewing_three_image, R.drawable.sewing_four_image, R.drawable.sewing_five_image};
+    int [] image_list_on = {R.drawable.sewing_one_image_on, R.drawable.sewing_two_image_on, R.drawable.sewing_three_image_on, R.drawable.sewing_four_image_on, R.drawable.sewing_five_image_on};
 
 
     public SewingAdapter(ArrayList<Integer> list,Activity activity){
@@ -30,7 +32,7 @@ public class SewingAdapter extends RecyclerView.Adapter<SewingAdapter.ViewHolder
 
 
 
-        deviceWidth = (displayMetrics.widthPixels / 720) * 204  ;  // 핸드폰의 가로 해상도를 구함.
+        deviceWidth = (displayMetrics.widthPixels / 720) * 210  ;  // 핸드폰의 가로 해상도를 구함.
         Log.e("deviceWidth",deviceWidth+"");
 
     }
@@ -41,7 +43,7 @@ public class SewingAdapter extends RecyclerView.Adapter<SewingAdapter.ViewHolder
         Context context = parent.getContext() ;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
 
-        View view = inflater.inflate(R.layout.sewing_recyclerview_ltem, parent, false) ;
+        View view = inflater.inflate(R.layout.sewing_item_list, parent, false) ;
         ViewHolder vh = new ViewHolder(view) ;
 
         return vh;
@@ -49,10 +51,12 @@ public class SewingAdapter extends RecyclerView.Adapter<SewingAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Log.e("mData",mData.get(position)+"");
+        holder.itemView.getLayoutParams().width = deviceWidth;
+        holder.itemView.requestLayout();
+//        holder.imageView.
         holder.imageView.setBackgroundResource(mData.get(position));
 
-
-        holder.itemView.getLayoutParams().width = deviceWidth;
 
     }
 
@@ -68,7 +72,15 @@ public class SewingAdapter extends RecyclerView.Adapter<SewingAdapter.ViewHolder
             super(itemView) ;
 
             // 뷰 객체에 대한 참조. (hold strong reference)
-            imageView = itemView.findViewById(R.id.imageview) ;
+            imageView = itemView.findViewById(R.id.imageview);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e("position",getAdapterPosition()+"");
+                }
+            });
+
+
         }
     }
 }

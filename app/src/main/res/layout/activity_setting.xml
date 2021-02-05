@@ -134,7 +134,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="58"
                 android:orientation="horizontal"
-                android:weightSum="720">
+                android:weightSum="588">
 
                 <View
                     android:layout_width="0dp"
@@ -145,12 +145,17 @@
                     android:id="@+id/device_num"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="394"
+                    android:layout_weight="294"
                     android:text="AFDA653a"
                     android:layout_gravity="center"
                     android:gravity="center|left"
                     android:textColor="#707070"
                     ></TextView>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="34"></View>
 
 
 
@@ -161,6 +166,8 @@
                     android:layout_weight="230"
                     android:background="@drawable/device_connect_cancel_btn"
                     ></androidx.appcompat.widget.AppCompatButton>
+
+
 
             </LinearLayout>
 
@@ -187,7 +194,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="85"
+                    android:layout_weight="72"
                     android:orientation="vertical"
                     android:weightSum="88">
 
@@ -200,7 +207,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="44"
-                        android:track="@drawable/switch_track_selector"
                         android:thumb="@drawable/switch_thumb"
                         android:switchMinWidth="0dp"
                         android:textOff=""
@@ -217,7 +223,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="45"></View>
+                    android:layout_weight="58"></View>
 
             </LinearLayout>
 
@@ -243,7 +249,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="85"
+                    android:layout_weight="72"
                     android:orientation="vertical"
                     android:weightSum="88">
 
@@ -256,7 +262,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="44"
-                        android:track="@drawable/switch_track_selector"
                         android:thumb="@drawable/switch_thumb"
                         android:switchMinWidth="0dp"
                         android:textOff=""
@@ -274,7 +279,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="45"></View>
+                    android:layout_weight="58"></View>
             </LinearLayout>
 
             <LinearLayout
@@ -316,10 +321,11 @@
                         <SeekBar
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:thumb="@drawable/seekbar_seekbar_thumb"
-                            android:progressDrawable="@drawable/seekbar"
-                            android:max="3"
-                            android:progress="2"></SeekBar>
+                            android:thumb="@drawable/seek_tumb"
+                            android:progressDrawable="@drawable/seek_bar"
+                            android:max="4"
+                            android:splitTrack="false"
+                            android:progress="1"></SeekBar>
 
                     </LinearLayout>
 
@@ -338,9 +344,10 @@
                         <SeekBar
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:thumb="@drawable/seekbar_seekbar_thumb"
-                            android:progressDrawable="@drawable/seekbar"
+                            android:thumb="@drawable/seek_tumb"
+                            android:progressDrawable="@drawable/seek_bar"
                             android:max="3"
+                            android:splitTrack="false"
                             android:progress="1"></SeekBar>
 
                     </LinearLayout>

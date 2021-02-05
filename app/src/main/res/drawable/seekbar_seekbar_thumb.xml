@@ -9,12 +9,12 @@
         android:color="#ffffff"/>
     <!-- 테두리 -->
     <stroke
-        android:width="0.5dp"
+        android:width="1dp"
         android:color="#767676"
         />
     <!-- 크기 -->
     <size
-        android:width="13dp"
+        android:width="12dp"
         android:height="15dp"/>
 
 

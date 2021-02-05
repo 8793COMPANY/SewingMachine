@@ -15,25 +15,24 @@ import java.util.ArrayList;
 public class ViewPagerAdapter extends PagerAdapter {
     Context context;
     ArrayList<Integer> imageList;
+    int [] image_list = {R.drawable.sewing_one_image, R.drawable.sewing_two_image, R.drawable.sewing_three_image, R.drawable.sewing_four_image, R.drawable.sewing_five_image};
 
-    public ViewPagerAdapter(Context context, ArrayList<Integer> imageList){
+    public ViewPagerAdapter(Context context){
         this.context = context;
-        this.imageList = imageList;
-
-        Log.e("!","뭔데");
     }
 
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         Log.e("??","뭔데");
+        View view = null;
+        if (context != null){
+            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.viewpager_list, container, false);
+            ImageView imageView = view.findViewById(R.id.imageview);
+            imageView.setBackgroundResource(R.drawable.item_background);
+        }
 
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.viewpager_list, null);
-
-        Log.e("imageList",imageList.get(position)+"");
-        ImageView imageView = view.findViewById(R.id.imageview);
-        imageView.setBackgroundResource(imageList.get(position));
         container.addView(view);
 
         return view;
@@ -44,16 +43,16 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return imageList.size();
+        return image_list.length;
     }
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.invalidate();
+        container.removeView((View) object);
     }
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return false;
+        return (view == (View)object);
     }
 }

@@ -3,14 +3,14 @@
     android:shape="oval">
 
     <size
-        android:width="22dp"
-        android:height="22dp"></size>
+        android:width="18dp"
+        android:height="18dp"></size>
 
     <solid
         android:color="#FFFFFF" />
 
     <stroke
-        android:width="2dp"
+        android:width="1dp"
         android:color="#009dc7" />
 
 </shape>
