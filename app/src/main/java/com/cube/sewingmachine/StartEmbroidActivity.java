@@ -3,14 +3,17 @@ package com.cube.sewingmachine;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -63,8 +66,6 @@ import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 public class StartEmbroidActivity extends AppCompatActivity {
-
-    private static final String SETTINGS_GRID = "grid";
     private static final String URL_ABOUT = "https://github.com/RodrigoDavy/PixelArtist/blob/master/README.md";
     private static final int MY_REQUEST_WRITE_STORAGE = 5;
     private int currentColor;
@@ -73,7 +74,11 @@ public class StartEmbroidActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
     AppCompatButton back_btn;
     ImageButton factory_reset, save_btn;
-    private SharedPreferences settings;
+    AlertDialog factory_reset_dialog;
+    SharedPreferences settings;
+    SharedPreferences.Editor editor;
+    String mode;
+    int pa_index = 0;
     private boolean grid;
 
     /**
@@ -94,20 +99,105 @@ public class StartEmbroidActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_embroid);
-        
-        initPalette();
-        initPixels();
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
 
-        settings = getPreferences(0);
-        pixelGrid(true);
-
-        // TODO : 버튼 온클릭 만들기
         factory_reset = findViewById(R.id.factory_reset);
         save_btn = findViewById(R.id.save_btn);
         back_btn = findViewById(R.id.back_btn);
+        
+        initPalette();
+        initPixels();
+        initDialog();
+        initPreset();
 
-        // 프리셋 테스트
+        pixelGrid(true);
+
+        settings = getSharedPreferences("localData", 0);
+        editor = settings.edit();
+
+        // TODO : 임시파일 로드
+        //openFile(".tmp", false);
+
+        // 초기화 버튼
+        factory_reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                factory_reset_dialog.show();
+            }
+        });
+
+        // TODO : 저장 버튼
+        save_btn.setOnClickListener(new View.OnClickListener() {
+            LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
+            int si = settings.getInt("save_index", 3);
+
+            @Override
+            public void onClick(View v) {
+                if (mode.equals("edit")) {
+                    // 수정 모드
+                    saveFile(pa_index + ".pixel_artist", false);
+                    screenShot(linearLayout, pa_index + ".jpg");
+
+                    Toast.makeText(StartEmbroidActivity.this, "자수가 저장되었습니다", Toast.LENGTH_SHORT).show();
+                    Log.e("뉴-자수", "수정 세이브 인덱스 : " + si);
+
+                    Intent intent = new Intent(StartEmbroidActivity.this, EmbroideryActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    // 신규 모드
+                    si += 1;
+
+                    if (si > 14) {
+                        Toast.makeText(StartEmbroidActivity.this, "자수를 저장할 수 있는 공간이 부족합니다", Toast.LENGTH_SHORT).show();
+                    } else {
+                        saveFile(si + ".pixel_artist", false);
+                        screenShot(linearLayout, si + ".jpg");
+
+                        editor.putInt("save_index", si);
+                        editor.apply();
+
+                        Toast.makeText(StartEmbroidActivity.this, "자수가 저장되었습니다", Toast.LENGTH_SHORT).show();
+                        Log.e("뉴-자수", "세이브 인덱스 : " + si);
+
+                        Intent intent = new Intent(StartEmbroidActivity.this, EmbroideryActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            }
+        });
+
+        // 뒤로가기 버튼
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        // (시작) 권한 요청
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_REQUEST_WRITE_STORAGE);
+
+            return;
+
+        }
+
+        // 모드 셀렉터
+        Intent intent = getIntent();
+        mode = intent.getStringExtra("mode");
+
+        if (mode.equals("edit")) {
+            pa_index = intent.getIntExtra("pa_index", 0);
+            openFile(pa_index + ".pixel_artist", false);
+        }
+    }
+
+    public void initPreset() {
         fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
         drawPreset_friedEgg();
         saveFile("0" + ".pixel_artist", false);
@@ -125,9 +215,47 @@ public class StartEmbroidActivity extends AppCompatActivity {
         saveFile("3" + ".pixel_artist", false);
 
         fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
-        //
 
-        openFile(".tmp", false);
+
+        BitmapDrawable drawable0 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_0);
+        BitmapDrawable drawable1 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_1);
+        BitmapDrawable drawable2 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_2);
+        BitmapDrawable drawable3 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_3);
+
+        screenShot2(drawable0.getBitmap(), "0" + ".jpg");
+        screenShot2(drawable1.getBitmap(), "1" + ".jpg");
+        screenShot2(drawable2.getBitmap(), "2" + ".jpg");
+        screenShot2(drawable3.getBitmap(), "3" + ".jpg");
+    }
+
+    public void initDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_factory_reset, null);
+        LinearLayout fr_cancle, fr_ok;
+
+        fr_cancle = dialogView.findViewById(R.id.fr_cancle);
+        fr_ok = dialogView.findViewById(R.id.fr_ok);
+
+        fr_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                factory_reset_dialog.dismiss();
+            }
+        });
+
+        fr_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
+                updateDrawerHeader();
+                factory_reset_dialog.dismiss();
+            }
+        });
+
+        builder.setView(dialogView);
+
+        factory_reset_dialog = builder.create();
     }
 
     @Override
@@ -135,9 +263,6 @@ public class StartEmbroidActivity extends AppCompatActivity {
         super.onStop();
 
         saveFile(".tmp", false);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(SETTINGS_GRID, grid);
-        editor.apply();
     }
 
     // TODO : 불러오기 함수
@@ -220,6 +345,93 @@ public class StartEmbroidActivity extends AppCompatActivity {
         }
     }
 
+    // TODO : JPG 저장 함수
+    public void screenShot(View view, String filename) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
+                view.getHeight(), Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        if (isExternalStorageWritable()) {
+            Log.e(MainActivity.class.getName(), "External storage is not writable");
+        }
+
+        File imageFolder = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
+        Log.e("스샷", "screenShot: " + imageFolder.getPath());
+
+        boolean success = true;
+
+        if (!imageFolder.exists()) {
+            success = imageFolder.mkdirs();
+        }
+
+        if (success) {
+            File imageFile = new File(imageFolder, filename);
+
+            FileOutputStream outputStream;
+
+            try {
+
+                if (!imageFile.exists()) {
+                    imageFile.createNewFile();
+                }
+
+                outputStream = new FileOutputStream(imageFile);
+                int quality = 100;
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+                outputStream.flush();
+                outputStream.close();
+            } catch (FileNotFoundException e) {
+                Log.e(MainActivity.class.getName(), "File not found");
+            } catch (IOException e) {
+                Log.e(MainActivity.class.getName(), "IOException related to generating bitmap file");
+            }
+        } else {
+        }
+    }
+
+    // TODO : JPG 저장 함수2
+    public void screenShot2(Bitmap bm, String filename) {
+        if (isExternalStorageWritable()) {
+            Log.e(MainActivity.class.getName(), "External storage is not writable");
+        }
+
+        File imageFolder = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
+        Log.e("프리셋 스샷", "screenShot: " + imageFolder.getPath());
+
+        boolean success = true;
+
+        if (!imageFolder.exists()) {
+            success = imageFolder.mkdirs();
+        }
+
+        if (success) {
+            File imageFile = new File(imageFolder, filename);
+
+            FileOutputStream outputStream;
+
+            try {
+
+                if (!imageFile.exists()) {
+                    imageFile.createNewFile();
+                }
+
+                outputStream = new FileOutputStream(imageFile);
+                int quality = 100;
+                bm.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+                outputStream.flush();
+                outputStream.close();
+            } catch (FileNotFoundException e) {
+                Log.e(MainActivity.class.getName(), "File not found");
+            } catch (IOException e) {
+                Log.e(MainActivity.class.getName(), "IOException related to generating bitmap file");
+            }
+        } else {
+        }
+    }
+
     // TODO : 권한 요청
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -246,14 +458,13 @@ public class StartEmbroidActivity extends AppCompatActivity {
     private void updateDrawerHeader() {
         View view = findViewById(R.id.paper_linear_layout);
         Bitmap bitmap;
-        pixelGrid(false);
 
         if (view.getWidth() > 0 && view.getHeight() > 0) {
             bitmap = Bitmap.createBitmap(view.getWidth(),
-                    view.getHeight(), Bitmap.Config.ARGB_8888);
+                    view.getHeight(), Bitmap.Config.RGB_565);
         } else {
             bitmap = Bitmap.createBitmap(200,
-                    200, Bitmap.Config.ARGB_8888);
+                    200, Bitmap.Config.RGB_565);
             bitmap.eraseColor(Color.WHITE);
         }
 
@@ -262,11 +473,11 @@ public class StartEmbroidActivity extends AppCompatActivity {
 
         ImageView mini_map = findViewById(R.id.mini_map);
         mini_map.setImageBitmap(bitmap);
-        pixelGrid(true);
     }
 
     private void initPalette() {
         colorButtons = new Button[]{
+                findViewById(R.id.color_button_erase),
                 findViewById(R.id.color_button_white),
                 findViewById(R.id.color_button_black),
                 findViewById(R.id.color_button_grey),
@@ -296,6 +507,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
 
         colors = new int[]{
                 ContextCompat.getColor(this, R.color.white),
+                ContextCompat.getColor(this, R.color.white),
                 ContextCompat.getColor(this, R.color.black),
                 ContextCompat.getColor(this, R.color.grey),
 
@@ -322,13 +534,13 @@ public class StartEmbroidActivity extends AppCompatActivity {
                 ContextCompat.getColor(this, R.color.purple_2)
         };
 
-        for (int i = 0; i < colorButtons.length; i++) {
+        for (int i = 1; i < colorButtons.length; i++) {
 
             GradientDrawable cd = (GradientDrawable) colorButtons[i].getBackground();
             cd.setColor(colors[i]);
         }
 
-        selectColor(colorButtons[0]);
+        selectColor(colorButtons[2]);
     }
 
     //Initializes the "pixels" (basically sets OnLongClickListener on them)
@@ -535,6 +747,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
         LinearLayout paintCase = findViewById(R.id.palette_linear_layout);
 
         int[] drawables = new int[]{
+                R.drawable.erase,
                 R.drawable.white,
                 R.drawable.black,
                 R.drawable.grey,

@@ -7,6 +7,12 @@
     android:orientation="horizontal">
 
     <Button
+        android:id="@+id/color_button_erase"
+        android:layout_marginVertical="15dp"
+        android:layout_marginHorizontal="6dp" style= "@style/ColorButton"
+        android:background="@drawable/erase" />
+
+    <Button
         android:id="@+id/color_button_white"
                 android:layout_marginVertical="15dp"
         android:layout_marginHorizontal="6dp" style= "@style/ColorButton"
