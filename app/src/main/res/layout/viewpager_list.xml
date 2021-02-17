@@ -7,6 +7,6 @@
         android:id="@+id/imageview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/start_sewing"></androidx.appcompat.widget.AppCompatImageView>
+        android:background="@drawable/imageview_bottom_round"></androidx.appcompat.widget.AppCompatImageView>
 
 </LinearLayout>

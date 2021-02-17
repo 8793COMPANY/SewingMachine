@@ -102,7 +102,7 @@ public class EmbroideryActivity extends AppCompatActivity {
         start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EmbroideryActivity.this, StartEmbroidActivity.class);
+                Intent intent = new Intent(EmbroideryActivity.this, CreateActivity.class);
                 startActivity(intent);
             }
         });

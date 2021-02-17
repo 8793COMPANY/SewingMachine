@@ -1,68 +1,258 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1280">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:gravity="center">
+        android:layout_height="0dp"
+        android:layout_weight="30"></LinearLayout>
 
-        <!-- 미니맵 -->
-        <ImageView
-            android:id="@+id/mini_map"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="5dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="60"
+        android:orientation="horizontal"
+        android:weightSum="720">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="36"></View>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/back_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="60"
+            android:background="@drawable/back_btn"></androidx.appcompat.widget.AppCompatButton>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="520"></View>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="56"
+        android:orientation="vertical"
+        android:weightSum="60"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"></View>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/finish_btn"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            android:background="@drawable/finish_text_btn"
+            ></androidx.appcompat.widget.AppCompatButton>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"></View>
 
     </LinearLayout>
 
-    <!-- 캔버스 -->
-    <ScrollView
-        android:id="@+id/pll1"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginBottom="150dp"
-        android:layout_gravity="center"
-        android:layout_weight="1">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="48"></View>
 
-        <HorizontalScrollView
-            android:id="@+id/pll2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+    </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/paper_linear_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/darker_gray"
-                android:orientation="vertical">
-
-                <include layout="@layout/paper_line" />
-                <include layout="@layout/paper_line" />
-                <include layout="@layout/paper_line" />
-                <include layout="@layout/paper_line" />
-
-                <include layout="@layout/paper_line" />
-                <include layout="@layout/paper_line" />
-                <include layout="@layout/paper_line" />
-                <include layout="@layout/paper_line" />
-            </LinearLayout>
-
-        </HorizontalScrollView>
-
-    </ScrollView>
-
-    <!-- 팔레트 -->
-    <HorizontalScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="124"
+        android:orientation="horizontal"
+        android:weightSum="720">
 
-        <include layout="@layout/canvas" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="298"></View>
 
-    </HorizontalScrollView>
+        <androidx.appcompat.widget.AppCompatImageView
 
+            android:id="@+id/preview_image"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="124"
+            android:background="#e2e2e2">
+
+        </androidx.appcompat.widget.AppCompatImageView>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="298"></View>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="32"></LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="44"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="1-5 준비중 ..."
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            ></TextView>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="28"></LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="18"
+        android:orientation="horizontal"
+        android:weightSum="720">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="180"></View>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/progress_image"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="360"
+            android:background="@drawable/progress_img0"></androidx.appcompat.widget.AppCompatImageView>
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="180"></View>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="42"></LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="624"
+        android:orientation="horizontal"
+        android:weightSum="720">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="48"></View>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="624"
+            android:background="#767676"></LinearLayout>
+
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="48"></View>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="48"></LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="84"
+        android:orientation="horizontal"
+        android:weightSum="720">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="122"></View>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/start_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="476"
+            android:background="@drawable/embroid_start_btn"></androidx.appcompat.widget.AppCompatButton>
+
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="122"></View>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20"></LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="84"
+        android:orientation="horizontal"
+        android:weightSum="720">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="122"></View>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/stop_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="476"
+            android:background="@drawable/embroid_stop_btn"></androidx.appcompat.widget.AppCompatButton>
+
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="122"></View>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="42"></LinearLayout>
 </LinearLayout>

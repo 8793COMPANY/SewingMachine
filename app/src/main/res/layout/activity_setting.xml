@@ -33,6 +33,7 @@
                 android:layout_weight="36"></View>
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/back_btn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="60"
@@ -204,6 +205,7 @@
                         android:layout_weight="22"></View>
 
                     <Switch
+                        android:id="@+id/auto_login_switch"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="44"
@@ -259,6 +261,7 @@
                         android:layout_weight="22"></View>
 
                     <Switch
+                        android:id="@+id/bluetooth_switch"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="44"
@@ -319,6 +322,7 @@
                         android:layout_weight="30">
 
                         <SeekBar
+                            android:id="@+id/speed_seekbar"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:thumb="@drawable/seek_tumb"
@@ -342,6 +346,7 @@
                         android:layout_weight="30">
 
                         <SeekBar
+                            android:id="@+id/prepare_time_seekbar"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:thumb="@drawable/seek_tumb"

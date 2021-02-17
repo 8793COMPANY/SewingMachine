@@ -23,25 +23,25 @@
             android:layout_height="0dp"
             android:layout_weight="140"
             android:orientation="horizontal"
-            android:weightSum="360">
+            android:weightSum="720">
 
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="122"></View>
+                android:layout_weight="244"></View>
 
             <ImageView
                 android:id="@+id/logo_image"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="116"
+                android:layout_weight="232"
                 android:background="@drawable/intro_logo"></ImageView>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="122"></View>
+                android:layout_weight="244"></View>
 
         </LinearLayout>
 
@@ -139,52 +139,63 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/touch_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="24"></LinearLayout>
+            android:layout_weight="102"
+            android:orientation="vertical"
+            android:weightSum="102"
+            android:gravity="center"
+            android:layout_gravity="center">
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="34"
-            android:orientation="horizontal"
-            android:weightSum="720">
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="148"></View>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/auto_login_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="30"
-                android:background="@drawable/auto_login_btn_off"></androidx.appcompat.widget.AppCompatButton>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="34"
+                android:orientation="horizontal"
+                android:weightSum="720"
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="14"></View>
+                >
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="124"
-                android:background="@drawable/auto_login_text"></ImageView>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="148"></View>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="404"></View>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/auto_login_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="30"
+                    android:background="@drawable/auto_login_btn_off"></androidx.appcompat.widget.AppCompatButton>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="14"></View>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="124"
+                    android:background="@drawable/auto_login_text"></ImageView>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="404"></View>
+
+            </LinearLayout>
+
+
+
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="44"></LinearLayout>
+
 
 
         <LinearLayout
