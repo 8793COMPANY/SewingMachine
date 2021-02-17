@@ -1,6 +1,6 @@
 package com.cube.sewingmachine;
 
-<<<<<<< HEAD
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import android.text.TextWatcher;
 import android.text.method.Touch;
 import android.util.Log;
 import android.view.TouchDelegate;
-=======
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,7 +27,6 @@ import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
->>>>>>> a89124ff6a05e298f306d323580914338fa6af75
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -78,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
     // bluetooth state check
     private int chk_Bt_Connection = 0;
 
-
+    String [] bluetooth_data = {"a","b","c","d","e","f"};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -177,9 +176,13 @@ public class LoginActivity extends AppCompatActivity {
                 if (!id.equals("")){
                     editor.putString("id",id);
                     editor.apply();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(),"기기번호를 입력해주세요.",Toast.LENGTH_SHORT).show();
                 }
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+
             }
         });
 
@@ -215,11 +218,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
         Log.e("hello",bluetooth.getState()+"");
-//        if ( !preferences.getString("address","none").equals("none") ){
-//            bluetooth.enableBluetooth("auto");
-//        }else{
-//            bluetooth.enableBluetooth("connect");
-//        }
+        if ( !preferences.getString("address","none").equals("none") ){
+            bluetooth.enableBluetooth("auto");
+        }else{
+            bluetooth.enableBluetooth("connect");
+        }
 
 
 
@@ -260,7 +263,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     Log.e("데이터 저장","ㅎㅎ");
                     byte[] buffer = null;
-                    String str = "a";
+                    String str = bluetooth_data[preferences.getInt("speed",0)];
+//                    String str = "f";
+                    Log.e("str",str+"");
                     buffer = str.getBytes();
                     bluetooth.write(buffer);
                     break;

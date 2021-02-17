@@ -18,6 +18,8 @@ public class CreateActivity extends AppCompatActivity {
 
         back_btn = findViewById(R.id.back_btn);
         finish_btn = findViewById(R.id.finish_btn);
+        start_btn = findViewById(R.id.start_btn);
+        stop_btn = findViewById(R.id.stop_btn);
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override

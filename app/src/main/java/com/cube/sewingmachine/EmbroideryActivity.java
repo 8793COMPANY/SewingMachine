@@ -209,13 +209,10 @@ public class EmbroideryActivity extends AppCompatActivity {
         start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-<<<<<<< HEAD
                 Intent intent = new Intent(EmbroideryActivity.this, CreateActivity.class);
                 startActivity(intent);
-=======
                 // TODO : 구현 끝판왕... ㅠㅠ
                 Toast.makeText(EmbroideryActivity.this, "현재 개발 중", Toast.LENGTH_SHORT).show();
->>>>>>> a89124ff6a05e298f306d323580914338fa6af75
             }
         });
 

@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -24,6 +25,10 @@ public class SettingActivity extends AppCompatActivity {
 
     SeekBar speed_seekbar, prepare_time_seekbar;
 
+    TextView device_num;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,20 +41,25 @@ public class SettingActivity extends AppCompatActivity {
         device_connect_cancel = findViewById(R.id.device_connect_cancel_btn);
         back_btn = findViewById(R.id.back_btn);
         save_btn = findViewById(R.id.save_btn);
+        device_num = findViewById(R.id.device_num);
         auto_login_switch = findViewById(R.id.auto_login_switch);
         bluetooth_switch = findViewById(R.id.bluetooth_switch);
         speed_seekbar = findViewById(R.id.speed_seekbar);
         prepare_time_seekbar = findViewById(R.id.prepare_time_seekbar);
 
+        device_num.setText(preferences.getString("id","none"));
+
         if (preferences.getBoolean("auto_login",false)){
             auto_login_switch.setChecked(true);
+
         }
 
         if (preferences.getBoolean("pairing",false)){
             bluetooth_switch.setChecked(true);
         }
 
-        speed_seekbar.setProgress(preferences.getInt("speed",1));
+        speed_seekbar.setProgress(preferences.getInt("speed",0));
+
         prepare_time_seekbar.setProgress(preferences.getInt("time",1));
 
         device_connect_cancel.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +136,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 editor.putInt("speed",progress);
-//                editor.apply();
+
             }
 
             @Override
