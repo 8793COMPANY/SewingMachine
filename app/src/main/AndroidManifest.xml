@@ -17,10 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SewingMachine">
-<<<<<<< HEAD
 
-=======
->>>>>>> b854e5d559156251fe2ddf683bf7aca24adad773
         <activity
             android:theme="@style/Theme.SewingMachine.old"
             android:name=".StartEmbroidActivity"></activity>

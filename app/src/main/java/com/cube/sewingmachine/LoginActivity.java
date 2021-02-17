@@ -1,9 +1,5 @@
 package com.cube.sewingmachine;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> b854e5d559156251fe2ddf683bf7aca24adad773
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -18,10 +14,6 @@ import android.text.TextWatcher;
 import android.text.method.Touch;
 import android.util.Log;
 import android.view.TouchDelegate;
-<<<<<<< HEAD
-
-=======
->>>>>>> b854e5d559156251fe2ddf683bf7aca24adad773
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
