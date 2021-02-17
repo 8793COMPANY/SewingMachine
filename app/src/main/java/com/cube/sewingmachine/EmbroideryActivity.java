@@ -209,10 +209,28 @@ public class EmbroideryActivity extends AppCompatActivity {
         start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+<<<<<<< HEAD
                 Intent intent = new Intent(EmbroideryActivity.this, CreateActivity.class);
                 startActivity(intent);
                 // TODO : 구현 끝판왕... ㅠㅠ
                 Toast.makeText(EmbroideryActivity.this, "현재 개발 중", Toast.LENGTH_SHORT).show();
+=======
+                //파일 블러오기 코드
+                //File imageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
+                File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+                //File openFile = new File(imageFolder, pixelAdapter.getCurrentCheckedPos() + ".jpg");
+                File openFile = new File(imageFolder, pixelAdapter.getCurrentCheckedPos() + ".pixel_artist");
+
+                if(openFile.exists()) {
+                    Intent intent = new Intent(EmbroideryActivity.this, CreateActivity.class);
+                    intent.putExtra("pa_index", pixelAdapter.getCurrentCheckedPos());
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(EmbroideryActivity.this, "빈 자수는 시작 할 수 없습니다", Toast.LENGTH_SHORT).show();
+                }
+>>>>>>> b854e5d559156251fe2ddf683bf7aca24adad773
             }
         });
 
@@ -275,14 +293,24 @@ public class EmbroideryActivity extends AppCompatActivity {
         copyAssets();
 
         BitmapDrawable drawable0 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_0);
-        BitmapDrawable drawable1 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_1);
-        BitmapDrawable drawable2 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_2);
-        BitmapDrawable drawable3 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_3);
+        screenShot2(drawable0.getBitmap().copy(Bitmap.Config.RGB_565, true), "0" + ".jpg");
+        drawable0.getBitmap().recycle();
 
-        screenShot2(drawable0.getBitmap(), "0" + ".jpg");
-        screenShot2(drawable1.getBitmap(), "1" + ".jpg");
-        screenShot2(drawable2.getBitmap(), "2" + ".jpg");
-        screenShot2(drawable3.getBitmap(), "3" + ".jpg");
+        BitmapDrawable drawable1 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_1);
+        screenShot2(drawable1.getBitmap().copy(Bitmap.Config.RGB_565, true), "1" + ".jpg");
+        drawable1.getBitmap().recycle();
+
+        BitmapDrawable drawable2 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_2);
+        screenShot2(drawable2.getBitmap().copy(Bitmap.Config.RGB_565, true), "2" + ".jpg");
+        drawable2.getBitmap().recycle();
+
+        BitmapDrawable drawable3 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_3);
+        screenShot2(drawable3.getBitmap().copy(Bitmap.Config.RGB_565, true), "3" + ".jpg");
+        drawable3.getBitmap().recycle();
+
+        BitmapDrawable drawable4 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_bl);
+        screenShot2(drawable4.getBitmap().copy(Bitmap.Config.RGB_565, true), "bl" + ".jpg");
+        drawable4.getBitmap().recycle();
 
         editor.putBoolean("firstInit", true);
         editor.apply();
@@ -361,7 +389,7 @@ public class EmbroideryActivity extends AppCompatActivity {
                 }
 
                 outputStream = new FileOutputStream(imageFile);
-                int quality = 100;
+                int quality = 2;
                 bm.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
                 outputStream.flush();
                 outputStream.close();
