@@ -3,14 +3,18 @@ package com.cube.sewingmachine;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -18,6 +22,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -33,6 +38,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -47,6 +53,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -56,20 +64,25 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 public class StartEmbroidActivity extends AppCompatActivity {
-
-    private static final String SETTINGS_GRID = "grid";
     private static final String URL_ABOUT = "https://github.com/RodrigoDavy/PixelArtist/blob/master/README.md";
     private static final int MY_REQUEST_WRITE_STORAGE = 5;
     private int currentColor;
     private Button colorButtons[];
     private int colors[];
     private ActionBarDrawerToggle drawerToggle;
-    private SharedPreferences settings;
+    AppCompatButton back_btn;
+    ImageButton factory_reset, save_btn;
+    AlertDialog factory_reset_dialog;
+    SharedPreferences settings;
+    SharedPreferences.Editor editor;
+    String mode;
+    int pa_index = 0;
     private boolean grid;
 
     /**
@@ -90,35 +103,152 @@ public class StartEmbroidActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_embroid);
+
+        factory_reset = findViewById(R.id.factory_reset);
+        save_btn = findViewById(R.id.save_btn);
+        back_btn = findViewById(R.id.back_btn);
         
         initPalette();
         initPixels();
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
+        initDialog();
 
-        settings = getPreferences(0);
+        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.erase));
+
         pixelGrid(true);
 
-        // 프리셋 테스트
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
-        drawPreset_friedEgg();
-        saveFile("0" + ".pixel_artist", false);
+        settings = getSharedPreferences("localData", 0);
+        editor = settings.edit();
 
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
-        drawPreset_heart();
-        saveFile("1" + ".pixel_artist", false);
+        if (!settings.getBoolean("firstInit", false)) {
+            firstInit();
+        }
 
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
-        drawPreset_cactus();
-        saveFile("2" + ".pixel_artist", false);
+        // TODO : 임시파일 로드
+        //openFile(".tmp", false);
 
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
-        drawPreset_smile();
-        saveFile("3" + ".pixel_artist", false);
+        // 초기화 버튼
+        factory_reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                factory_reset_dialog.show();
+            }
+        });
 
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
-        //
+        // TODO : 저장 버튼
+        save_btn.setOnClickListener(new View.OnClickListener() {
+            LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
+            int si = settings.getInt("save_index", 3);
 
-        openFile(".tmp", false);
+            @Override
+            public void onClick(View v) {
+                if (mode.equals("edit")) {
+                    // 수정 모드
+                    saveFile(pa_index + ".pixel_artist", false);
+                    screenShot(linearLayout, pa_index + ".jpg");
+
+                    Toast.makeText(StartEmbroidActivity.this, "자수가 저장되었습니다", Toast.LENGTH_SHORT).show();
+                    Log.e("뉴-자수", "수정 세이브 인덱스 : " + si);
+
+                    Intent intent = new Intent(StartEmbroidActivity.this, EmbroideryActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    // 신규 모드
+                    si += 1;
+
+                    if (si > 14) {
+                        Toast.makeText(StartEmbroidActivity.this, "자수를 저장할 수 있는 공간이 부족합니다", Toast.LENGTH_SHORT).show();
+                    } else {
+                        saveFile(si + ".pixel_artist", false);
+                        screenShot(linearLayout, si + ".jpg");
+
+                        editor.putInt("save_index", si);
+                        editor.apply();
+
+                        Toast.makeText(StartEmbroidActivity.this, "자수가 저장되었습니다", Toast.LENGTH_SHORT).show();
+                        Log.e("뉴-자수", "세이브 인덱스 : " + si);
+
+                        Intent intent = new Intent(StartEmbroidActivity.this, EmbroideryActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            }
+        });
+
+        // 뒤로가기 버튼
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        // 모드 셀렉터
+        Intent intent = getIntent();
+        mode = intent.getStringExtra("mode");
+
+        if (mode.equals("edit")) {
+            pa_index = intent.getIntExtra("pa_index", 0);
+            openFile(pa_index + ".pixel_artist", false);
+
+            //파일 블러오기 코드
+            File imageFolder = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
+
+            File openFile = new File(imageFolder, pa_index + ".jpg");
+
+            // 비트맵 데이터 전처리
+            Bitmap tempBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565);
+            tempBitmap.eraseColor(0xFFBDBDBD);
+
+            Bitmap bMap;
+
+            if(openFile.exists()) {
+                Uri uri = Uri.fromFile(openFile);
+                try {
+                    bMap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                } catch (IOException e) {
+                    bMap = tempBitmap;
+                    e.printStackTrace();
+                }
+            } else {
+                bMap = tempBitmap;
+            }
+
+            ImageView mini_map = findViewById(R.id.mini_map);
+            mini_map.setImageBitmap(bMap);
+        }
+    }
+
+    public void initDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_factory_reset, null);
+        LinearLayout fr_cancle, fr_ok;
+
+        fr_cancle = dialogView.findViewById(R.id.fr_cancle);
+        fr_ok = dialogView.findViewById(R.id.fr_ok);
+
+        fr_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                factory_reset_dialog.dismiss();
+            }
+        });
+
+        fr_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.erase));
+                updateDrawerHeader();
+                factory_reset_dialog.dismiss();
+            }
+        });
+
+        builder.setView(dialogView);
+
+        factory_reset_dialog = builder.create();
     }
 
     @Override
@@ -126,9 +256,6 @@ public class StartEmbroidActivity extends AppCompatActivity {
         super.onStop();
 
         saveFile(".tmp", false);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(SETTINGS_GRID, grid);
-        editor.apply();
     }
 
     // TODO : 불러오기 함수
@@ -211,6 +338,93 @@ public class StartEmbroidActivity extends AppCompatActivity {
         }
     }
 
+    // TODO : JPG 저장 함수
+    public void screenShot(View view, String filename) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
+                view.getHeight(), Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        if (isExternalStorageWritable()) {
+            Log.e(MainActivity.class.getName(), "External storage is not writable");
+        }
+
+        File imageFolder = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
+        Log.e("스샷", "screenShot: " + imageFolder.getPath());
+
+        boolean success = true;
+
+        if (!imageFolder.exists()) {
+            success = imageFolder.mkdirs();
+        }
+
+        if (success) {
+            File imageFile = new File(imageFolder, filename);
+
+            FileOutputStream outputStream;
+
+            try {
+
+                if (!imageFile.exists()) {
+                    imageFile.createNewFile();
+                }
+
+                outputStream = new FileOutputStream(imageFile);
+                int quality = 100;
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+                outputStream.flush();
+                outputStream.close();
+            } catch (FileNotFoundException e) {
+                Log.e(MainActivity.class.getName(), "File not found");
+            } catch (IOException e) {
+                Log.e(MainActivity.class.getName(), "IOException related to generating bitmap file");
+            }
+        } else {
+        }
+    }
+
+    // TODO : JPG 저장 함수2
+    public void screenShot2(Bitmap bm, String filename) {
+        if (isExternalStorageWritable()) {
+            Log.e(MainActivity.class.getName(), "External storage is not writable");
+        }
+
+        File imageFolder = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
+        Log.e("프리셋 스샷", "screenShot: " + imageFolder.getPath());
+
+        boolean success = true;
+
+        if (!imageFolder.exists()) {
+            success = imageFolder.mkdirs();
+        }
+
+        if (success) {
+            File imageFile = new File(imageFolder, filename);
+
+            FileOutputStream outputStream;
+
+            try {
+
+                if (!imageFile.exists()) {
+                    imageFile.createNewFile();
+                }
+
+                outputStream = new FileOutputStream(imageFile);
+                int quality = 100;
+                bm.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+                outputStream.flush();
+                outputStream.close();
+            } catch (FileNotFoundException e) {
+                Log.e(MainActivity.class.getName(), "File not found");
+            } catch (IOException e) {
+                Log.e(MainActivity.class.getName(), "IOException related to generating bitmap file");
+            }
+        } else {
+        }
+    }
+
     // TODO : 권한 요청
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -237,14 +451,13 @@ public class StartEmbroidActivity extends AppCompatActivity {
     private void updateDrawerHeader() {
         View view = findViewById(R.id.paper_linear_layout);
         Bitmap bitmap;
-        pixelGrid(false);
 
         if (view.getWidth() > 0 && view.getHeight() > 0) {
             bitmap = Bitmap.createBitmap(view.getWidth(),
-                    view.getHeight(), Bitmap.Config.ARGB_8888);
+                    view.getHeight(), Bitmap.Config.RGB_565);
         } else {
             bitmap = Bitmap.createBitmap(200,
-                    200, Bitmap.Config.ARGB_8888);
+                    200, Bitmap.Config.RGB_565);
             bitmap.eraseColor(Color.WHITE);
         }
 
@@ -253,11 +466,11 @@ public class StartEmbroidActivity extends AppCompatActivity {
 
         ImageView mini_map = findViewById(R.id.mini_map);
         mini_map.setImageBitmap(bitmap);
-        pixelGrid(true);
     }
 
     private void initPalette() {
         colorButtons = new Button[]{
+                findViewById(R.id.color_button_erase),
                 findViewById(R.id.color_button_white),
                 findViewById(R.id.color_button_black),
                 findViewById(R.id.color_button_grey),
@@ -286,6 +499,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
         };
 
         colors = new int[]{
+                ContextCompat.getColor(this, R.color.erase),
                 ContextCompat.getColor(this, R.color.white),
                 ContextCompat.getColor(this, R.color.black),
                 ContextCompat.getColor(this, R.color.grey),
@@ -313,13 +527,13 @@ public class StartEmbroidActivity extends AppCompatActivity {
                 ContextCompat.getColor(this, R.color.purple_2)
         };
 
-        for (int i = 0; i < colorButtons.length; i++) {
+        for (int i = 1; i < colorButtons.length; i++) {
 
             GradientDrawable cd = (GradientDrawable) colorButtons[i].getBackground();
             cd.setColor(colors[i]);
         }
 
-        selectColor(colorButtons[0]);
+        selectColor(colorButtons[2]);
     }
 
     //Initializes the "pixels" (basically sets OnLongClickListener on them)
@@ -352,8 +566,8 @@ public class StartEmbroidActivity extends AppCompatActivity {
             x = 0;
             y = 0;
         } else {
-            x = 1;
-            y = 1;
+            x = 5;
+            y = 5;
         }
 
         for (int i = 0; i < paper.getChildCount(); i++) {
@@ -387,10 +601,13 @@ public class StartEmbroidActivity extends AppCompatActivity {
     }
 
     // TODO : 캔버스 디테일 색칠 함수
-    private void fillScreen_detail(int color, int start_row, int end_row, int start_column, int end_column) {
+    private void fillScreen_detail(int color, int start_row, int start_column, int end_column) {
         LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
-        for (int i = start_row; i < end_row; i++) {
+        start_row -= 1;
+        start_column -= 1;
+
+        for (int i = start_row, end_row = start_row + 1; i < end_row; i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
 
             for (int j = start_column; j < end_column; j++) {
@@ -401,131 +618,185 @@ public class StartEmbroidActivity extends AppCompatActivity {
         }
     }
 
+/*
     // TODO : 1번 프리셋 - 계란후라이
     private void drawPreset_friedEgg() {
         // STEP 1 : 원 그리기
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 0, 1, 2, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 2, 1, 2);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 2, 6, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 4, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 4, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 5, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 5, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 6, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 6, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 7, 1, 2);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 7, 6, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 8, 2, 6);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 4);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 10, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 2, 2);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 12, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 2, 2);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 12, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 1, 1);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 13, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 1, 1);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 13, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 1, 1);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 13, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 8, 1, 1);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 8, 13, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 9, 1, 1);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 9, 13, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 10, 2, 2);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 10, 12, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 11, 2, 2);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 11, 12, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 12, 3, 4);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 12, 10, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 13, 5, 9);
 
         // STEP 2 : 노른자
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 2, 3, 3, 5);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 3, 4, 2, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white), 3, 4, 3, 4);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 4, 5, 2, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 5, 6, 3, 5);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 6, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 5, 5);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 5, 6, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 10, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 4, 4);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 6, 5, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white), 6, 6, 7);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 11, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 4, 4);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 7, 5, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white), 7, 6, 7);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 11, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 8, 4, 4);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 8, 5, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 8, 11, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 9, 5, 5);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 9, 6, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 9, 10, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 10, 6, 9);
     }
 
     // TODO : 2번 프리셋 - 하트
     private void drawPreset_heart() {
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 0, 1, 1, 3);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 0, 1, 5, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 2, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 2, 3, 5);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 2, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 1, 2, 1, 3);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 1, 2, 5, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 2, 3, 1, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 4, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 4, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 3, 4, 1, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 5, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 5, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 4, 5, 1, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 6, 1, 2);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 6, 6, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 5, 6, 2, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 7, 2, 3);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 7, 5, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 6, 7, 3, 5);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 8, 3, 5);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 3, 5);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 9, 11);
+
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 2, 6);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 2, 3, 5);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 8, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 2, 9, 11);
+
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 1, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 3, 2, 6);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 3, 8, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white), 3, 10, 10);
+
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 1, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 4, 2, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white), 4, 11, 11);
+
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 1, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 5, 2, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 1, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 6, 2, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 1, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 7, 2, 12);
+
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 8, 2, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 8, 3, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 9, 3, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 9, 4, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 10, 4, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 10, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 11, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 11, 6, 8);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 12, 6, 8);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.red), 12, 7, 7);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 13, 7, 7);
     }
 
     // TODO : 3번 프리셋 - 선인장
     private void drawPreset_cactus() {
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 0, 1, 3, 5);
-
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 2, 1, 3);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 2, 5, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 1, 2, 3, 5);
-
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 2, 3);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 5, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 2, 3, 1, 2);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 2, 3, 3, 5);
-
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 4, 1, 2);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 4, 5, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 4, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 3, 4, 2, 5);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 3, 4, 6, 7);
-
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 5, 2, 3);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 5, 6, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 4, 5, 3, 6);
-
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 6, 2, 3);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 6, 5, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 5, 6, 3, 5);
-
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 7, 2, 3);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 7, 5, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 6, 7, 3, 5);
-
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 8, 3, 5);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 6, 8);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 2, 6, 8);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 4, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 3, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 2, 2);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 4, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 4, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 1, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 12, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 5, 2, 2);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 5, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 1, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 6, 2, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 6, 12, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 2, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 7, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 7, 12, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 8, 4, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 8, 5, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 9, 4, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 9, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 10, 4, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 10, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 11, 4, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 11, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 12, 4, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.malachite), 12, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 13, 5, 9);
     }
 
     // TODO : 4번 프리셋 - 스마일
     private void drawPreset_smile() {
         // STEP 1 : 머리 그리기
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 0, 1, 2, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 2, 1, 2);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 1, 2, 2, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 2, 6, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 2, 3, 1, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 4, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 3, 4, 1, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 4, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 5, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 4, 5, 1, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 5, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 6, 0, 1);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 5, 6, 1, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 6, 7, 8);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 7, 1, 2);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 6, 7, 2, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 7, 6, 7);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 8, 2, 6);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 1, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 4);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 2, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 10, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 2, 2);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 3, 3, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 3, 12, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 2, 2);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 4, 3, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 12, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 1, 1);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 5, 2, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 13, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 1, 1);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 6, 2, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 13, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 1, 1);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 7, 2, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 7, 13, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 8, 1, 1);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 8, 2, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 8, 13, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 9, 1, 1);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 9, 2, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 9, 13, 13);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 10, 2, 2);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 10, 3, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 10, 12, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 11, 2, 2);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 11, 3, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 11, 12, 12);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 12, 3, 4);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.amber), 12, 5, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 12, 10, 11);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 13, 5, 9);
 
         // STEP 2 : 표정 그리기
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 2, 3);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 2, 3, 5, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 5, 2, 3);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 4, 5, 5, 6);
-        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 6, 3, 5);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 5, 5);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 5, 9, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 5, 5);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 6, 9, 9);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 8, 4, 4);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 8, 10, 10);
+        fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 9, 5, 9);
     }
+*/
 
     //On click method that selects the current color based on the palette button pressed
     public void selectColor(View v) {
         LinearLayout paintCase = findViewById(R.id.palette_linear_layout);
 
         int[] drawables = new int[]{
+                R.drawable.erase,
                 R.drawable.white,
                 R.drawable.black,
                 R.drawable.grey,
@@ -582,5 +853,61 @@ public class StartEmbroidActivity extends AppCompatActivity {
         v.setBackgroundColor(currentColor);
 
         updateDrawerHeader();
+    }
+
+    public void firstInit() {
+        copyAssets();
+
+        BitmapDrawable drawable0 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_0);
+        BitmapDrawable drawable1 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_1);
+        BitmapDrawable drawable2 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_2);
+        BitmapDrawable drawable3 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_3);
+
+        screenShot2(drawable0.getBitmap(), "0" + ".jpg");
+        screenShot2(drawable1.getBitmap(), "1" + ".jpg");
+        screenShot2(drawable2.getBitmap(), "2" + ".jpg");
+        screenShot2(drawable3.getBitmap(), "3" + ".jpg");
+
+        editor.putBoolean("firstInit", true);
+        editor.apply();
+    }
+
+    private void copyAssets() {
+        AssetManager assetManager = getAssets();
+        String[] files = null;
+        try {
+            files = assetManager.list("");
+        } catch (IOException e) {
+            Log.e("tag", "Failed to get asset file list.", e);
+        }
+        for(String filename : files) {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                in = assetManager.open(filename);
+
+                File outDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+                File outFile = new File(outDir, filename);
+
+                out = new FileOutputStream(outFile);
+                copyFile(in, out);
+                in.close();
+                in = null;
+                out.flush();
+                out.close();
+                out = null;
+            } catch(IOException e) {
+                Log.e("tag", "Failed to copy asset file: " + filename, e);
+            }
+        }
+    }
+
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+            out.write(buffer, 0, read);
+        }
     }
 }

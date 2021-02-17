@@ -41,7 +41,7 @@
         <ImageButton
             android:id="@+id/factory_reset"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:layout_weight="88"
             android:layout_gravity="center"
             android:background="@drawable/factory_reset" />
@@ -54,7 +54,7 @@
         <ImageButton
             android:id="@+id/save_btn"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:layout_weight="56"
             android:layout_gravity="center"
             android:background="@drawable/setting_save_btn" />
@@ -101,7 +101,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="248"
+            android:layout_weight="138"
             android:weightSum="224"
             android:orientation="vertical">
 
@@ -132,15 +132,14 @@
             android:layout_height="match_parent"
             android:layout_weight="48"></View>
 
-            <!-- 캔버스 -->
+        <!-- 캔버스 -->
         <ScrollView
             android:id="@+id/pll1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/scroll_view_border"
-            android:padding="2dp"
-            android:layout_weight="624"
-           >
+            android:padding="1dp"
+            android:layout_weight="624">
 
             <HorizontalScrollView
                 android:id="@+id/pll2"
@@ -187,7 +186,7 @@
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="140"
+        android:layout_weight="142"
         android:scrollbars="none">
 
         <include layout="@layout/canvas" />
