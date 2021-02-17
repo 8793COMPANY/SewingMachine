@@ -109,7 +109,11 @@ public class StartEmbroidActivity extends AppCompatActivity {
         back_btn = findViewById(R.id.back_btn);
         
         initPalette();
-        initPixels();
+        try {
+            initPixels();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         initDialog();
 
         fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.erase));
@@ -371,7 +375,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
                 }
 
                 outputStream = new FileOutputStream(imageFile);
-                int quality = 100;
+                int quality = 2;
                 bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
                 outputStream.flush();
                 outputStream.close();
@@ -412,7 +416,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
                 }
 
                 outputStream = new FileOutputStream(imageFile);
-                int quality = 100;
+                int quality = 2;
                 bm.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
                 outputStream.flush();
                 outputStream.close();
@@ -537,7 +541,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
     }
 
     //Initializes the "pixels" (basically sets OnLongClickListener on them)
-    private void initPixels() {
+    private void initPixels() throws IOException {
         LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
         for (int i = 0; i < paper.getChildCount(); i++) {
@@ -553,6 +557,20 @@ public class StartEmbroidActivity extends AppCompatActivity {
                 });
             }
         }
+
+        //파일 블러오기 코드
+        File imageFolder = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
+
+        File openFile = new File(imageFolder, "bl" + ".jpg");
+
+        Bitmap bMap;
+
+        Uri uri = Uri.fromFile(openFile);
+        bMap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+
+        ImageView mini_map = findViewById(R.id.mini_map);
+        mini_map.setImageBitmap(bMap);
     }
 
     //Shows or hides the pixels boundaries from the paper_linear_layout
@@ -862,11 +880,13 @@ public class StartEmbroidActivity extends AppCompatActivity {
         BitmapDrawable drawable1 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_1);
         BitmapDrawable drawable2 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_2);
         BitmapDrawable drawable3 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_3);
+        BitmapDrawable drawable4 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_bl);
 
-        screenShot2(drawable0.getBitmap(), "0" + ".jpg");
-        screenShot2(drawable1.getBitmap(), "1" + ".jpg");
-        screenShot2(drawable2.getBitmap(), "2" + ".jpg");
-        screenShot2(drawable3.getBitmap(), "3" + ".jpg");
+        screenShot2(drawable0.getBitmap().copy(Bitmap.Config.RGB_565, true), "0" + ".jpg");
+        screenShot2(drawable1.getBitmap().copy(Bitmap.Config.RGB_565, true), "1" + ".jpg");
+        screenShot2(drawable2.getBitmap().copy(Bitmap.Config.RGB_565, true), "2" + ".jpg");
+        screenShot2(drawable3.getBitmap().copy(Bitmap.Config.RGB_565, true), "3" + ".jpg");
+        screenShot2(drawable4.getBitmap().copy(Bitmap.Config.RGB_565, true), "bl" + ".jpg");
 
         editor.putBoolean("firstInit", true);
         editor.apply();
