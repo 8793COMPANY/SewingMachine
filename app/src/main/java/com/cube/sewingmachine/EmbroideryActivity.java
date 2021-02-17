@@ -88,9 +88,6 @@ public class EmbroideryActivity extends AppCompatActivity {
                 tempBitmap
         };
 
-
-        //saveFile(si + ".pixel_artist", false);
-        //screenShot(linearLayout, si + ".jpg");
         int si = settings.getInt("save_index", 3);
         Log.e("자수 시작하기", "세이브 인덱스: " + si);
 
@@ -148,8 +145,6 @@ public class EmbroideryActivity extends AppCompatActivity {
             }
         }
 
-
-
         Pixel_Recycler_View = findViewById(R.id.Pixel_Recycler_View);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context, 3);
         Pixel_Recycler_View.setLayoutManager(layoutManager);
@@ -193,6 +188,7 @@ public class EmbroideryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO : 구현 끝판왕... ㅠㅠ
+                Toast.makeText(EmbroideryActivity.this, "현재 개발 중", Toast.LENGTH_SHORT).show();
             }
         });
 
