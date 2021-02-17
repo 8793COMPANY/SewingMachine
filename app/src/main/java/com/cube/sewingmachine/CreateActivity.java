@@ -353,4 +353,23 @@ public class CreateActivity extends AppCompatActivity {
             Log.e("MainActivity.openFile", "Could not open file");
         }
     }
+
+    // TODO : '자수 시작하기' 버튼 눌렀을때 준비하는 함수
+    public void readySequence() {
+    }
+
+    // TODO : 준비 중 이후 10회 반복하는 함수
+    public void progressSequence() {
+    }
+
+    // TODO : 10회 반복이 완료되면 마무리하는 함수
+    public void endSequence() {
+        // TODO : 마무리 리스트
+        // 1. 딜레이
+        // 2. 타겟 컬러를 원래 컬러로 바꾸기
+        // 3. i, j 좌표 증가시키고 타겟 컬러로 바꾸기
+        // 4. 13, 13 좌표인지 체크하고, 루프 종료
+    }
+
+    // TODO : 위에 세 함수 구현 후 이중포문 돌리기
 }
