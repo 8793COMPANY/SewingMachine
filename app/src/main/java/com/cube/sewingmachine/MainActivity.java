@@ -4,12 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
-
-<<<<<<< HEAD
 import android.app.Activity;
-=======
 import android.Manifest;
->>>>>>> a89124ff6a05e298f306d323580914338fa6af75
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -36,15 +32,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
+import static com.cube.sewingmachine.LoginActivity.bluetooth;
 
-<<<<<<< HEAD
-=======
+public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
     private static final int MY_REQUEST_WRITE_STORAGE = 5;
     // Intent request code
->>>>>>> a89124ff6a05e298f306d323580914338fa6af75
 
 
     Button start_embroid_btn, start_sewing_btn, create_new_btn, setting_btn_btn;
@@ -109,10 +103,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-<<<<<<< HEAD
-
-=======
     private final Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -207,5 +197,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
->>>>>>> a89124ff6a05e298f306d323580914338fa6af75
 }

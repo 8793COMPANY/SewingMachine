@@ -209,13 +209,21 @@ public class EmbroideryActivity extends AppCompatActivity {
         start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-<<<<<<< HEAD
-                Intent intent = new Intent(EmbroideryActivity.this, CreateActivity.class);
-                startActivity(intent);
-=======
-                // TODO : 구현 끝판왕... ㅠㅠ
-                Toast.makeText(EmbroideryActivity.this, "현재 개발 중", Toast.LENGTH_SHORT).show();
->>>>>>> a89124ff6a05e298f306d323580914338fa6af75
+                //파일 블러오기 코드
+                //File imageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
+                File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+                //File openFile = new File(imageFolder, pixelAdapter.getCurrentCheckedPos() + ".jpg");
+                File openFile = new File(imageFolder, pixelAdapter.getCurrentCheckedPos() + ".pixel_artist");
+
+                if(openFile.exists()) {
+                    Intent intent = new Intent(EmbroideryActivity.this, CreateActivity.class);
+                    intent.putExtra("pa_index", pixelAdapter.getCurrentCheckedPos());
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(EmbroideryActivity.this, "빈 자수는 시작 할 수 없습니다", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

@@ -82,15 +82,15 @@
             android:layout_height="match_parent"
             android:layout_weight="298"></View>
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
 
-            android:id="@+id/preview_image"
+            android:id="@+id/mini_map"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="124"
             android:background="#e2e2e2">
 
-        </androidx.appcompat.widget.AppCompatImageView>
+        </ImageView>
 
         <View
             android:layout_width="0dp"
@@ -162,28 +162,57 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="624"
-        android:orientation="horizontal"
-        android:weightSum="720">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="48"></View>
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="624"
-            android:background="#767676"></LinearLayout>
-
+        android:weightSum="720"
+        android:layout_weight="624">
 
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="48"></View>
+
+        <!-- 캔버스 -->
+        <ScrollView
+            android:id="@+id/pll1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/scroll_view_border"
+            android:padding="1dp"
+            android:layout_weight="624">
+
+            <HorizontalScrollView
+                android:id="@+id/pll2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/paper_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/darker_gray"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/paper_line" />
+                    <include layout="@layout/paper_line" />
+                    <include layout="@layout/paper_line" />
+                    <include layout="@layout/paper_line" />
+
+                    <include layout="@layout/paper_line" />
+                    <include layout="@layout/paper_line" />
+                    <include layout="@layout/paper_line" />
+                    <include layout="@layout/paper_line" />
+
+                    <include layout="@layout/paper_line" />
+                    <include layout="@layout/paper_line" />
+                    <include layout="@layout/paper_line" />
+                    <include layout="@layout/paper_line" />
+
+                    <include layout="@layout/paper_line" />
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </ScrollView>
 
     </LinearLayout>
 

@@ -17,13 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SewingMachine">
-<<<<<<< HEAD
-        <activity android:name=".StartEmbroidActivity"></activity>
-=======
         <activity
             android:theme="@style/Theme.SewingMachine.old"
             android:name=".StartEmbroidActivity"></activity>
->>>>>>> a89124ff6a05e298f306d323580914338fa6af75
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".DeviceListActivity" />
         <activity android:name=".LoginActivity">
