@@ -375,7 +375,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
                 }
 
                 outputStream = new FileOutputStream(imageFile);
-                int quality = 2;
+                int quality = 30;
                 bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
                 outputStream.flush();
                 outputStream.close();
@@ -416,7 +416,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
                 }
 
                 outputStream = new FileOutputStream(imageFile);
-                int quality = 2;
+                int quality = 30;
                 bm.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
                 outputStream.flush();
                 outputStream.close();

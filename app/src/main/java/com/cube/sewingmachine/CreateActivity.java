@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
 import java.io.BufferedReader;
@@ -43,6 +45,8 @@ import java.io.OutputStream;
 
 public class CreateActivity extends AppCompatActivity {
     Button back_btn, finish_btn, start_btn, stop_btn;
+    TextView textview;
+    AppCompatImageView progress_image;
 
     private static final int MY_REQUEST_WRITE_STORAGE = 5;
     private int currentColor;
@@ -51,6 +55,7 @@ public class CreateActivity extends AppCompatActivity {
     SharedPreferences settings;
     SharedPreferences.Editor editor;
     int pa_index = 0;
+    int stream_x, stream_y;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +66,9 @@ public class CreateActivity extends AppCompatActivity {
         finish_btn = findViewById(R.id.finish_btn);
         start_btn = findViewById(R.id.start_btn);
         stop_btn = findViewById(R.id.stop_btn);
+
+        textview = findViewById(R.id.textview);
+        progress_image = findViewById(R.id.progress_image);
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +137,8 @@ public class CreateActivity extends AppCompatActivity {
 
         ImageView mini_map = findViewById(R.id.mini_map);
         mini_map.setImageBitmap(bMap);
+
+        readyStreamFile(pa_index + ".pixel_artist");
     }
 
     // TODO : 불러오기 함수
@@ -279,5 +289,68 @@ public class CreateActivity extends AppCompatActivity {
     // TODO : 픽셀 선택 했을때 온-클릭
     public void changeColor(View v) {
 
+    }
+
+    // TODO : pa 파일 스트림 함수
+    public void readyStreamFile(String fileName) {
+        File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File openFile = new File(imageFolder, fileName);
+
+        boolean flag = true;
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(openFile));
+            int color;
+            String value;
+
+            int x, y;
+
+            if ((value = bufferedReader.readLine()) != null) {
+                x = Integer.valueOf(value);
+            } else {
+                throw new IOException();
+            }
+
+            if ((value = bufferedReader.readLine()) != null) {
+                y = Integer.valueOf(value);
+            } else {
+                throw new IOException();
+            }
+
+
+
+
+            LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
+
+            for (int i = 0; i < x; i++) {
+                for (int j = 0; j < y; j++) {
+
+                    if ((value = bufferedReader.readLine()) != null) {
+                        color = Integer.valueOf(value);
+                    } else {
+                        throw new IOException();
+                    }
+
+                    if (color == getResources().getColor(R.color.erase)) {
+                    } else {
+                        if (flag) {
+                            stream_x = x;
+                            stream_y = y;
+
+                            View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
+                            v.setBackgroundColor(getResources().getColor(R.color.target));
+                            textview.setText( (i + 1) + "-" + (j + 1) + " 준비중 ..." );
+
+                            flag = false;
+                        }
+                    }
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            Log.e("MainActivity.openFile", "File not found");
+        } catch (IOException e) {
+            Log.e("MainActivity.openFile", "Could not open file");
+        }
     }
 }

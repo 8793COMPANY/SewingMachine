@@ -209,10 +209,6 @@ public class EmbroideryActivity extends AppCompatActivity {
         start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EmbroideryActivity.this, CreateActivity.class);
-                startActivity(intent);
-                // TODO : 구현 끝판왕... ㅠㅠ
-                Toast.makeText(EmbroideryActivity.this, "현재 개발 중", Toast.LENGTH_SHORT).show();
                 //파일 블러오기 코드
                 //File imageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
                 File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -386,7 +382,7 @@ public class EmbroideryActivity extends AppCompatActivity {
                 }
 
                 outputStream = new FileOutputStream(imageFile);
-                int quality = 2;
+                int quality = 30;
                 bm.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
                 outputStream.flush();
                 outputStream.close();
