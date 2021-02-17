@@ -1,11 +1,19 @@
 package com.cube.sewingmachine;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -16,12 +24,19 @@ import android.widget.Toast;
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
+    private static final int MY_REQUEST_WRITE_STORAGE = 5;
     // Intent request code
 
     //bluetooth
@@ -59,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
         viewPager.setAdapter(adapter);
         wormDotsIndicator.setViewPager(viewPager);
+
+        requestPerm();
 
         start_embroid_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,4 +200,34 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        super.onActivityResult(requestCode, resultCode, data);
 //    }
+
+    public void requestPerm() {
+        // (시작) 권한 요청
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_REQUEST_WRITE_STORAGE);
+
+            return;
+        }
+    }
+
+    // TODO : 권한 요청
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_REQUEST_WRITE_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    // can run additional stuff here
+                    //Toast.makeText(this, R.string.write_permission_granted, Toast.LENGTH_LONG).show();
+                } else {
+                    // permission denied
+                    //Toast.makeText(this, R.string.write_permission_unavailable, Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
 }

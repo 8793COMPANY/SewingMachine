@@ -3,6 +3,8 @@ package com.cube.sewingmachine;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -25,18 +27,23 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import static com.cube.sewingmachine.PixelAdapter.*;
 
 public class EmbroideryActivity extends AppCompatActivity {
+    private static final int MY_REQUEST_WRITE_STORAGE = 5;
     Context context;
 
     RecyclerView Pixel_Recycler_View;
@@ -45,6 +52,8 @@ public class EmbroideryActivity extends AppCompatActivity {
     Bitmap[] dataSet;
 
     Button create_btn, modify_btn, start_btn;
+
+    AppCompatButton back_btn;
 
     SharedPreferences settings;
     SharedPreferences.Editor editor;
@@ -59,8 +68,14 @@ public class EmbroideryActivity extends AppCompatActivity {
         modify_btn = findViewById(R.id.modify_btn);
         start_btn = findViewById(R.id.start_btn);
 
+        back_btn = findViewById(R.id.back_btn);
+
         settings = getSharedPreferences("localData", 0);
         editor = settings.edit();
+
+        if (!settings.getBoolean("firstInit", false)) {
+            firstInit();
+        }
 
         // 비트맵 데이터 전처리
         Bitmap tempBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565);
@@ -184,6 +199,13 @@ public class EmbroideryActivity extends AppCompatActivity {
             }
         });
 
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -245,5 +267,113 @@ public class EmbroideryActivity extends AppCompatActivity {
         }
 
         return linearLayout;
+    }
+
+    public void firstInit() {
+        copyAssets();
+
+        BitmapDrawable drawable0 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_0);
+        BitmapDrawable drawable1 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_1);
+        BitmapDrawable drawable2 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_2);
+        BitmapDrawable drawable3 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_3);
+
+        screenShot2(drawable0.getBitmap(), "0" + ".jpg");
+        screenShot2(drawable1.getBitmap(), "1" + ".jpg");
+        screenShot2(drawable2.getBitmap(), "2" + ".jpg");
+        screenShot2(drawable3.getBitmap(), "3" + ".jpg");
+
+        editor.putBoolean("firstInit", true);
+        editor.apply();
+    }
+
+    private void copyAssets() {
+        AssetManager assetManager = getAssets();
+        String[] files = null;
+        try {
+            files = assetManager.list("");
+        } catch (IOException e) {
+            Log.e("tag", "Failed to get asset file list.", e);
+        }
+        for(String filename : files) {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                // images, sounds, webkit
+                if (filename.equals("images") ||
+                        filename.equals("sounds") ||
+                        filename.equals("webkit")) {
+                } else {
+                    in = assetManager.open(filename);
+
+                    File outDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+                    File outFile = new File(outDir, filename);
+
+                    out = new FileOutputStream(outFile);
+                    copyFile(in, out);
+                    in.close();
+                    in = null;
+                    out.flush();
+                    out.close();
+                    out = null;
+                }
+            } catch(IOException e) {
+                Log.e("tag", "Failed to copy asset file: " + filename, e);
+            }
+        }
+    }
+
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+            out.write(buffer, 0, read);
+        }
+    }
+
+    // TODO : JPG 저장 함수2
+    public void screenShot2(Bitmap bm, String filename) {
+        if (isExternalStorageWritable()) {
+            Log.e(MainActivity.class.getName(), "External storage is not writable");
+        }
+
+        File imageFolder = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
+        Log.e("프리셋 스샷", "screenShot: " + imageFolder.getPath());
+
+        boolean success = true;
+
+        if (!imageFolder.exists()) {
+            success = imageFolder.mkdirs();
+        }
+
+        if (success) {
+            File imageFile = new File(imageFolder, filename);
+
+            FileOutputStream outputStream;
+
+            try {
+
+                if (!imageFile.exists()) {
+                    imageFile.createNewFile();
+                }
+
+                outputStream = new FileOutputStream(imageFile);
+                int quality = 100;
+                bm.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+                outputStream.flush();
+                outputStream.close();
+            } catch (FileNotFoundException e) {
+                Log.e(MainActivity.class.getName(), "File not found");
+            } catch (IOException e) {
+                Log.e(MainActivity.class.getName(), "IOException related to generating bitmap file");
+            }
+        } else {
+        }
+    }
+
+    private boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return !Environment.MEDIA_MOUNTED.equals(state);
     }
 }

@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -51,6 +53,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -107,12 +111,17 @@ public class StartEmbroidActivity extends AppCompatActivity {
         initPalette();
         initPixels();
         initDialog();
-        initPreset();
+
+        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.erase));
 
         pixelGrid(true);
 
         settings = getSharedPreferences("localData", 0);
         editor = settings.edit();
+
+        if (!settings.getBoolean("firstInit", false)) {
+            firstInit();
+        }
 
         // TODO : 임시파일 로드
         //openFile(".tmp", false);
@@ -175,18 +184,6 @@ public class StartEmbroidActivity extends AppCompatActivity {
             }
         });
 
-        // (시작) 권한 요청
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MY_REQUEST_WRITE_STORAGE);
-
-            return;
-
-        }
-
         // 모드 셀렉터
         Intent intent = getIntent();
         mode = intent.getStringExtra("mode");
@@ -194,38 +191,34 @@ public class StartEmbroidActivity extends AppCompatActivity {
         if (mode.equals("edit")) {
             pa_index = intent.getIntExtra("pa_index", 0);
             openFile(pa_index + ".pixel_artist", false);
+
+            //파일 블러오기 코드
+            File imageFolder = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
+
+            File openFile = new File(imageFolder, pa_index + ".jpg");
+
+            // 비트맵 데이터 전처리
+            Bitmap tempBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565);
+            tempBitmap.eraseColor(0xFFBDBDBD);
+
+            Bitmap bMap;
+
+            if(openFile.exists()) {
+                Uri uri = Uri.fromFile(openFile);
+                try {
+                    bMap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                } catch (IOException e) {
+                    bMap = tempBitmap;
+                    e.printStackTrace();
+                }
+            } else {
+                bMap = tempBitmap;
+            }
+
+            ImageView mini_map = findViewById(R.id.mini_map);
+            mini_map.setImageBitmap(bMap);
         }
-    }
-
-    public void initPreset() {
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
-        drawPreset_friedEgg();
-        saveFile("0" + ".pixel_artist", false);
-
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
-        drawPreset_heart();
-        saveFile("1" + ".pixel_artist", false);
-
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
-        drawPreset_cactus();
-        saveFile("2" + ".pixel_artist", false);
-
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
-        drawPreset_smile();
-        saveFile("3" + ".pixel_artist", false);
-
-        fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
-
-
-        BitmapDrawable drawable0 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_0);
-        BitmapDrawable drawable1 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_1);
-        BitmapDrawable drawable2 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_2);
-        BitmapDrawable drawable3 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_3);
-
-        screenShot2(drawable0.getBitmap(), "0" + ".jpg");
-        screenShot2(drawable1.getBitmap(), "1" + ".jpg");
-        screenShot2(drawable2.getBitmap(), "2" + ".jpg");
-        screenShot2(drawable3.getBitmap(), "3" + ".jpg");
     }
 
     public void initDialog() {
@@ -247,7 +240,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
         fr_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.white));
+                fillScreen(ContextCompat.getColor(StartEmbroidActivity.this, R.color.erase));
                 updateDrawerHeader();
                 factory_reset_dialog.dismiss();
             }
@@ -506,7 +499,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
         };
 
         colors = new int[]{
-                ContextCompat.getColor(this, R.color.white),
+                ContextCompat.getColor(this, R.color.erase),
                 ContextCompat.getColor(this, R.color.white),
                 ContextCompat.getColor(this, R.color.black),
                 ContextCompat.getColor(this, R.color.grey),
@@ -573,8 +566,8 @@ public class StartEmbroidActivity extends AppCompatActivity {
             x = 0;
             y = 0;
         } else {
-            x = 1;
-            y = 1;
+            x = 5;
+            y = 5;
         }
 
         for (int i = 0; i < paper.getChildCount(); i++) {
@@ -625,6 +618,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
         }
     }
 
+/*
     // TODO : 1번 프리셋 - 계란후라이
     private void drawPreset_friedEgg() {
         // STEP 1 : 원 그리기
@@ -795,6 +789,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
         fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 8, 10, 10);
         fillScreen_detail(ContextCompat.getColor(StartEmbroidActivity.this, R.color.black), 9, 5, 9);
     }
+*/
 
     //On click method that selects the current color based on the palette button pressed
     public void selectColor(View v) {
@@ -858,5 +853,61 @@ public class StartEmbroidActivity extends AppCompatActivity {
         v.setBackgroundColor(currentColor);
 
         updateDrawerHeader();
+    }
+
+    public void firstInit() {
+        copyAssets();
+
+        BitmapDrawable drawable0 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_0);
+        BitmapDrawable drawable1 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_1);
+        BitmapDrawable drawable2 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_2);
+        BitmapDrawable drawable3 = (BitmapDrawable) getResources().getDrawable(R.drawable.pixel_3);
+
+        screenShot2(drawable0.getBitmap(), "0" + ".jpg");
+        screenShot2(drawable1.getBitmap(), "1" + ".jpg");
+        screenShot2(drawable2.getBitmap(), "2" + ".jpg");
+        screenShot2(drawable3.getBitmap(), "3" + ".jpg");
+
+        editor.putBoolean("firstInit", true);
+        editor.apply();
+    }
+
+    private void copyAssets() {
+        AssetManager assetManager = getAssets();
+        String[] files = null;
+        try {
+            files = assetManager.list("");
+        } catch (IOException e) {
+            Log.e("tag", "Failed to get asset file list.", e);
+        }
+        for(String filename : files) {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                in = assetManager.open(filename);
+
+                File outDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+                File outFile = new File(outDir, filename);
+
+                out = new FileOutputStream(outFile);
+                copyFile(in, out);
+                in.close();
+                in = null;
+                out.flush();
+                out.close();
+                out = null;
+            } catch(IOException e) {
+                Log.e("tag", "Failed to copy asset file: " + filename, e);
+            }
+        }
+    }
+
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+            out.write(buffer, 0, read);
+        }
     }
 }

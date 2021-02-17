@@ -13,6 +13,7 @@
     <color name="black">#000000</color>      <!-- RGB: 0   | 0   | 0   -->
     <color name="grey">#BDBDBD</color>       <!-- RGB: 128 | 128 | 128 -->
     <color name="white">#ffffff</color>      <!-- RGB: 255 | 255 | 255 -->
+    <color name="erase">#FBFBFB</color>      <!-- RGB: 255 | 255 | 255 -->
 
     <!-- 50% LUMINESCENCE -->
     <color name="red">#ff0000</color>        <!-- RGB: 255 | 0   | 0   \/\/ HSL: 0   | 240 | 120 -->
