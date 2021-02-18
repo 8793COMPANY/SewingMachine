@@ -8,45 +8,20 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.Touch;
 import android.util.Log;
 import android.view.TouchDelegate;
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
-import android.os.Environment;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import java.util.Calendar;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -61,18 +36,10 @@ public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
     private static final int REQUEST_AUTO_ENABLE_BT = 3;
-    // Intent request code
 
-    //bluetooth
     public static Bluetooth bluetooth = null;
-    //bluetooth
 
-    // buletooth connect check
-    ProgressDialog dialog;
     public static boolean isConnected = false;
-    // buletooth connect check
-
-    // bluetooth state check
     private int chk_Bt_Connection = 0;
 
     String [] bluetooth_data = {"a","b","c","d","e","f"};
@@ -85,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
         overridePendingTransition(0,0);
 
         preferences = getSharedPreferences("info",MODE_PRIVATE);
-        // SharedPreferences 수정을 위한 Editor 객체를 얻어옵니다.
         editor = preferences.edit();
 
         View linearLayout=findViewById(R.id.login_container);
@@ -105,8 +71,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final View parent = (View) findViewById(R.id.touch_layout).getParent();
         parent.post( new Runnable() {
-            // Post in the parent's message queue to make sure the parent
-            // lays out its children before we call getHitRect()
+
             public void run() {
                 Log.e("click","gg");
                 Rect r = new Rect();
@@ -189,7 +154,6 @@ public class LoginActivity extends AppCompatActivity {
         if(bluetooth == null)bluetooth = new Bluetooth(this,handler);
 
 
-        //bluetooth state check
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -223,13 +187,11 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     private final Handler handler = new Handler() {
@@ -258,7 +220,6 @@ public class LoginActivity extends AppCompatActivity {
                         editor.apply();
                     }
 
-
                     Log.e("데이터 저장","ㅎㅎ");
                     byte[] buffer = null;
                     String str = bluetooth_data[preferences.getInt("speed",0)];
@@ -267,7 +228,7 @@ public class LoginActivity extends AppCompatActivity {
                     buffer = str.getBytes();
                     bluetooth.write(buffer);
                     break;
-                case 4: //수신한 데이터처리는 이곳에서
+                case 4:
                     Log.e("BT", "data recieve");
                     byte[] readBuf = (byte[]) msg.obj;
                     String readStr = new String(readBuf);
@@ -284,8 +245,7 @@ public class LoginActivity extends AppCompatActivity {
         {
             case REQUEST_CONNECT_DEVICE:
                 if(resultCode== Activity.RESULT_OK){
-                    //reconnectAddress = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                        bluetooth.getDeviceInfo(data);
+                    bluetooth.getDeviceInfo(data);
                 }
                 break;
             case REQUEST_ENABLE_BT:
@@ -302,7 +262,6 @@ public class LoginActivity extends AppCompatActivity {
                     Log.e("REQUEST","AUTO");
 
                     bluetooth.autoPairing(preferences.getString("address","none"));
-//                    Toast.makeText(getApplicationContext(),"블루투스가 자동연결 되었습니다.",Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
