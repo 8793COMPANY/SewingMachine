@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -47,7 +49,7 @@ public class CreateActivity extends AppCompatActivity {
     public static Bluetooth bluetooth = null;
     private static final int REQUEST_CONNECT_DEVICE = 1;
     int [] times = {5000, 10000, 15000, 20000};
-    Runnable fill_progress;
+//    Runnable fill_progress;
     int [] progress_images = {R.drawable.progress_img0,R.drawable.progress_img1,R.drawable.progress_img2,R.drawable.progress_img3,R.drawable.progress_img4,R.drawable.progress_img5,
     R.drawable.progress_img6, R.drawable.progress_img7, R.drawable.progress_img8, R.drawable.progress_img9, R.drawable.progress_img10};
 
@@ -57,7 +59,8 @@ public class CreateActivity extends AppCompatActivity {
 
     int count =0;
 
-    String [] number2;
+    String [] number, number2;
+    MyHandler handler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +71,8 @@ public class CreateActivity extends AppCompatActivity {
 
         pixel_array = new ArrayList<>();
         color_array = new ArrayList<>();
+
+        handler = new MyHandler();
 
         back_btn = findViewById(R.id.back_btn);
         finish_btn = findViewById(R.id.finish_btn);
@@ -94,9 +99,9 @@ public class CreateActivity extends AppCompatActivity {
         start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progress_num = 0;
-                progress_image.setBackgroundResource(R.drawable.progress_img0);
-                handler.postDelayed(start,0);
+                number = pixel_array.get(count).split("-");
+                textview.setText((Integer.parseInt(number[0])+1) + "-" +(Integer.parseInt(number[1])+1) + " 진행중 ...");
+                progressSequence();
                 start_btn.setBackgroundResource(R.drawable.embroid_start_off_btn);
                 start_btn.setEnabled(false);
                 stop_btn.setBackgroundResource(R.drawable.embroid_stop_btn);
@@ -117,41 +122,6 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-
-        fill_progress = new Runnable() {
-            @Override
-            public void run() {
-                Log.e("?","gg");
-                progress_image.setBackgroundResource(progress_images[progress_num]);
-
-                if (progress_num == 10) {
-                    Log.e("??","들어옴");
-                    start_btn.setBackgroundResource(R.drawable.embroid_start_btn);
-                    start_btn.setEnabled(true);
-                    stop_btn.setBackgroundResource(R.drawable.embroid_stop_off_btn);
-
-                    String [] number = pixel_array.get(count).split("-");
-                    fillScreen_detail(color_array.get(count),Integer.parseInt(number[0]),Integer.parseInt(number[1]));
-
-                    count++;
-                    number2 = pixel_array.get(count).split("-");
-                    fillScreen_detail(getResources().getColor(R.color.target),Integer.parseInt(number2[0]),Integer.parseInt(number2[1]));
-
-                    textview.setText((Integer.parseInt(number[0])+1) + "-" +(Integer.parseInt(number[1])+1) + " 완료!" );
-
-                    return ;
-                }else{
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressSequence();
-                        }
-                    },7000);
-                }
-
-
-            }
-        };
 
         initPixels();
 
@@ -234,7 +204,6 @@ public class CreateActivity extends AppCompatActivity {
                     View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
                     v.setBackgroundColor(color);
                     if (color != getResources().getColor(R.color.erase)) {
-//                        Log.e("i-j",i+"-"+j);
                         pixel_array.add(i+"-"+j);
                         color_array.add(color);
 
@@ -276,13 +245,6 @@ public class CreateActivity extends AppCompatActivity {
 
         ImageView mini_map = findViewById(R.id.mini_map);
         mini_map.setImageBitmap(bitmap);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        BackgroundThread thread = new BackgroundThread();
-        thread.start();
     }
 
     //Initializes the "pixels" (basically sets OnLongClickListener on them)
@@ -346,8 +308,6 @@ public class CreateActivity extends AppCompatActivity {
     // TODO : 캔버스 디테일 색칠 함수
     private void fillScreen_detail(int color, int i, int j) {
         LinearLayout paper = findViewById(R.id.paper_linear_layout);
-
-
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
             View pixel = l.getChildAt(j);
             pixel.setBackgroundColor(color);
@@ -426,14 +386,7 @@ public class CreateActivity extends AppCompatActivity {
         }
     }
 
-    Handler handler = new Handler();
 
-    Runnable start = new Runnable() {
-        @Override
-        public void run() {
-            progressSequence();
-        }
-    };
 
 
     // TODO : '자수 시작하기' 버튼 눌렀을때 준비하는 함수
@@ -444,15 +397,8 @@ public class CreateActivity extends AppCompatActivity {
     // TODO : 준비 중 이후 10회 반복하는 함수
     public void progressSequence() {
             Log.e("data","A");
-        send_data("a");
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    send_data("f");
-                    progress_num += 1;
-                    handler.postDelayed(fill_progress,0);
-                }
-            }, 2000);
+            send_data("a");
+            handler.sendEmptyMessageDelayed(3,2000);
     }
 
     // TODO : 10회 반복이 완료되면 마무리하는 함수
@@ -472,12 +418,70 @@ public class CreateActivity extends AppCompatActivity {
         Log.e("getState",bluetooth.getState()+"");
     }
 
-    class BackgroundThread extends Thread {
-        public void run() {
 
+    class MyHandler extends Handler{
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what){
+                case 0:
+                    Log.e("?","gg");
+                    progress_image.setBackgroundResource(progress_images[progress_num]);
+
+                    if (progress_num == 10) {
+                        Log.e("??","들어옴");
+                        textview.setText((Integer.parseInt(number[0])+1) + "-" +(Integer.parseInt(number[1])+1) + " 완료!" );
+                        sendEmptyMessageDelayed(1,2000);
+
+                        return ;
+                    }else{
+                        sendEmptyMessageDelayed(2,7000);
+                    }
+
+                    break;
+
+                case 1:
+
+                    start_btn.setBackgroundResource(R.drawable.embroid_start_btn);
+                    start_btn.setEnabled(true);
+                    stop_btn.setBackgroundResource(R.drawable.embroid_stop_off_btn);
+
+                    //progress image 초기화
+                    progress_num = 0;
+                    progress_image.setBackgroundResource(R.drawable.progress_img0);
+
+                    //pixel 다음 단계로
+                    fillScreen_detail(color_array.get(count),Integer.parseInt(number[0]),Integer.parseInt(number[1]));
+
+                    count++;
+                    number2 = pixel_array.get(count).split("-");
+                    fillScreen_detail(getResources().getColor(R.color.target),Integer.parseInt(number2[0]),Integer.parseInt(number2[1]));
+                    textview.setText((Integer.parseInt(number2[0])+1) + "-" +(Integer.parseInt(number2[1])+1) + " 준비중 ..." );
+
+                    break;
+
+                case 2:
+                    progressSequence();
+                    break;
+
+
+                case 3:
+                    Log.e("들어옴","ㅎㅎ");
+                    send_data("f");
+                    progress_num += 1;
+                    sendEmptyMessageDelayed(0,0);
+                    break;
+
+                case 4:
+                    removeMessages(0);
+                    removeMessages(1);
+                    removeMessages(2);
+                    Log.e("msg","remove");
+            }
         }
-
     }
+
 
 
 }
