@@ -17,6 +17,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -44,6 +46,9 @@ public class LoginActivity extends AppCompatActivity {
 
     String [] bluetooth_data = {"a","b","c","d","e","f"};
 
+    LinearLayout not_exist_device_linear,empty_view1,button_top_empty_view;
+    TextView not_exist_device_text;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +68,12 @@ public class LoginActivity extends AppCompatActivity {
         input_cancel_btn = findViewById(R.id.input_cancel);
 
         device_input = findViewById(R.id.device_input);
+
+        not_exist_device_linear = findViewById(R.id.no_exist_device_linear);
+        not_exist_device_text = findViewById(R.id.no_exist_device_text);
+
+        empty_view1 = findViewById(R.id.empty_view1);
+        button_top_empty_view = findViewById(R.id.button_top_empty_view);
 
         if (preferences.getBoolean("auto_login",false)){
             device_input.setText(preferences.getString("id","hello"));
@@ -84,6 +95,19 @@ public class LoginActivity extends AppCompatActivity {
                             auto_login_btn.setBackgroundResource(R.drawable.auto_login_btn_off);
                             check =false;
                         }else{
+                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)not_exist_device_linear.getLayoutParams();
+                            layoutParams.weight = 30;
+                            not_exist_device_linear.setLayoutParams(layoutParams);
+
+
+                            LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams)empty_view1.getLayoutParams();
+                            layoutParams2.weight = 18;
+                            empty_view1.setLayoutParams(layoutParams2);
+
+                            LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams)button_top_empty_view.getLayoutParams();
+                            layoutParams3.weight = 38;
+                            button_top_empty_view.setLayoutParams(layoutParams3);
+
                             auto_login_btn.setBackgroundResource(R.drawable.auto_login_btn_on);
                             check=true;
                             editor.putBoolean("auto_login",true);
@@ -197,6 +221,7 @@ public class LoginActivity extends AppCompatActivity {
     private final Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            Log.e("hi","돈다");
             switch (msg.what) {
                 case 0:
                 case 1:
@@ -213,6 +238,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("BT", "connected");
                     Toast.makeText(getApplicationContext(), "블루투스가 연결되었습니다.", Toast.LENGTH_SHORT).show();
                     Log.e("hello",bluetooth.getState()+"");
+                    login_btn.setEnabled(true);
 
                     if (preferences.getString("address","none").equals("none")){
                         editor.putString("address", bluetooth.getAddress());

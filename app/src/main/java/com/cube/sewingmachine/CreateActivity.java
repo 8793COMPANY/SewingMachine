@@ -2,46 +2,33 @@ package com.cube.sewingmachine;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class CreateActivity extends AppCompatActivity {
     Button back_btn, finish_btn, start_btn, stop_btn;
@@ -57,10 +44,30 @@ public class CreateActivity extends AppCompatActivity {
     int pa_index = 0;
     int stream_x, stream_y;
 
+    public static Bluetooth bluetooth = null;
+    private static final int REQUEST_CONNECT_DEVICE = 1;
+    int [] times = {5000, 10000, 15000, 20000};
+    Runnable fill_progress;
+    int [] progress_images = {R.drawable.progress_img0,R.drawable.progress_img1,R.drawable.progress_img2,R.drawable.progress_img3,R.drawable.progress_img4,R.drawable.progress_img5,
+    R.drawable.progress_img6, R.drawable.progress_img7, R.drawable.progress_img8, R.drawable.progress_img9, R.drawable.progress_img10};
+
+    int progress_num =0;
+    ArrayList<String> pixel_array;
+    ArrayList<Integer> color_array;
+
+    int count =0;
+
+    String [] number2;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+
+        if(bluetooth == null)bluetooth = LoginActivity.bluetooth;
+
+        pixel_array = new ArrayList<>();
+        color_array = new ArrayList<>();
 
         back_btn = findViewById(R.id.back_btn);
         finish_btn = findViewById(R.id.finish_btn);
@@ -87,16 +94,64 @@ public class CreateActivity extends AppCompatActivity {
         start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                progress_num = 0;
+                progress_image.setBackgroundResource(R.drawable.progress_img0);
+                handler.postDelayed(start,0);
+                start_btn.setBackgroundResource(R.drawable.embroid_start_off_btn);
+                start_btn.setEnabled(false);
+                stop_btn.setBackgroundResource(R.drawable.embroid_stop_btn);
             }
         });
 
         stop_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                start_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        start_btn.setBackgroundResource(R.drawable.embroid_start_btn);
+                        start_btn.setEnabled(true);
+                        stop_btn.setBackgroundResource(R.drawable.embroid_stop_off_btn);
+                    }
+                });
             }
         });
+
+
+        fill_progress = new Runnable() {
+            @Override
+            public void run() {
+                Log.e("?","gg");
+                progress_image.setBackgroundResource(progress_images[progress_num]);
+
+                if (progress_num == 10) {
+                    Log.e("??","들어옴");
+                    start_btn.setBackgroundResource(R.drawable.embroid_start_btn);
+                    start_btn.setEnabled(true);
+                    stop_btn.setBackgroundResource(R.drawable.embroid_stop_off_btn);
+
+                    String [] number = pixel_array.get(count).split("-");
+                    fillScreen_detail(color_array.get(count),Integer.parseInt(number[0]),Integer.parseInt(number[1]));
+
+                    count++;
+                    number2 = pixel_array.get(count).split("-");
+                    fillScreen_detail(getResources().getColor(R.color.target),Integer.parseInt(number2[0]),Integer.parseInt(number2[1]));
+
+                    textview.setText((Integer.parseInt(number[0])+1) + "-" +(Integer.parseInt(number[1])+1) + " 완료!" );
+
+                    return ;
+                }else{
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressSequence();
+                        }
+                    },7000);
+                }
+
+
+            }
+        };
 
         initPixels();
 
@@ -178,8 +233,22 @@ public class CreateActivity extends AppCompatActivity {
 
                     View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
                     v.setBackgroundColor(color);
+                    if (color != getResources().getColor(R.color.erase)) {
+//                        Log.e("i-j",i+"-"+j);
+                        pixel_array.add(i+"-"+j);
+                        color_array.add(color);
+
+                    }
+
                 }
             }
+
+            for (int i=0; i<pixel_array.size(); i++){
+                Log.e("pixel",pixel_array.get(i));
+                Log.e("color",color_array.get(i)+"");
+            }
+
+
 
         } catch (FileNotFoundException e) {
             Log.e("MainActivity.openFile", "File not found");
@@ -207,6 +276,13 @@ public class CreateActivity extends AppCompatActivity {
 
         ImageView mini_map = findViewById(R.id.mini_map);
         mini_map.setImageBitmap(bitmap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BackgroundThread thread = new BackgroundThread();
+        thread.start();
     }
 
     //Initializes the "pixels" (basically sets OnLongClickListener on them)
@@ -268,21 +344,15 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     // TODO : 캔버스 디테일 색칠 함수
-    private void fillScreen_detail(int color, int start_row, int start_column, int end_column) {
+    private void fillScreen_detail(int color, int i, int j) {
         LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
-        start_row -= 1;
-        start_column -= 1;
 
-        for (int i = start_row, end_row = start_row + 1; i < end_row; i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
+            View pixel = l.getChildAt(j);
+            pixel.setBackgroundColor(color);
 
-            for (int j = start_column; j < end_column; j++) {
-                View pixel = l.getChildAt(j);
 
-                pixel.setBackgroundColor(color);
-            }
-        }
     }
 
     //Onclick method that changes the color of a single "pixel"
@@ -297,6 +367,7 @@ public class CreateActivity extends AppCompatActivity {
         File openFile = new File(imageFolder, fileName);
 
         boolean flag = true;
+
 
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(openFile));
@@ -319,12 +390,10 @@ public class CreateActivity extends AppCompatActivity {
 
 
 
-
             LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
 
             for (int i = 0; i < x; i++) {
                 for (int j = 0; j < y; j++) {
-
                     if ((value = bufferedReader.readLine()) != null) {
                         color = Integer.valueOf(value);
                     } else {
@@ -333,9 +402,12 @@ public class CreateActivity extends AppCompatActivity {
 
                     if (color == getResources().getColor(R.color.erase)) {
                     } else {
+
                         if (flag) {
                             stream_x = x;
                             stream_y = y;
+
+
 
                             View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
                             v.setBackgroundColor(getResources().getColor(R.color.target));
@@ -354,12 +426,33 @@ public class CreateActivity extends AppCompatActivity {
         }
     }
 
+    Handler handler = new Handler();
+
+    Runnable start = new Runnable() {
+        @Override
+        public void run() {
+            progressSequence();
+        }
+    };
+
+
     // TODO : '자수 시작하기' 버튼 눌렀을때 준비하는 함수
     public void readySequence() {
+
     }
 
     // TODO : 준비 중 이후 10회 반복하는 함수
     public void progressSequence() {
+            Log.e("data","A");
+        send_data("a");
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    send_data("f");
+                    progress_num += 1;
+                    handler.postDelayed(fill_progress,0);
+                }
+            }, 2000);
     }
 
     // TODO : 10회 반복이 완료되면 마무리하는 함수
@@ -371,5 +464,20 @@ public class CreateActivity extends AppCompatActivity {
         // 4. 13, 13 좌표인지 체크하고, 루프 종료
     }
 
-    // TODO : 위에 세 함수 구현 후 이중포문 돌리기
+    public void send_data(String str){
+        byte[] buffer = null;
+        Log.e("str",str+"");
+        buffer = str.getBytes();
+        bluetooth.write(buffer);
+        Log.e("getState",bluetooth.getState()+"");
+    }
+
+    class BackgroundThread extends Thread {
+        public void run() {
+
+        }
+
+    }
+
+
 }

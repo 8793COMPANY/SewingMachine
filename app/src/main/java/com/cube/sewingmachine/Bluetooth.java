@@ -17,7 +17,7 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 
-public class Bluetooth {
+public class Bluetooth{
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -154,11 +154,11 @@ public class Bluetooth {
 
     private void connectionFailed() {
         setState(STATE_LISTEN);
-        LoginActivity.isConnected=false;
+//        LoginActivity.isConnected=false;
     }
     private void connectionLost() {
         setState(STATE_LISTEN);
-        LoginActivity.isConnected=false;
+//        LoginActivity.isConnected=false;
     }
     private class ConnectThread extends Thread {
         private final BluetoothSocket mSocket;
@@ -192,7 +192,12 @@ public class Bluetooth {
 
                     mSocket.close();
 //                    Toast.makeText(mActivity,"기기를 다시 선택해주세요.",Toast.LENGTH_SHORT).show();
-                    scanDevice();
+                    Log.e("??","kk");
+                    if (!preferences.getString("address","none").equals("none")){
+                        autoPairing(preferences.getString("address","none"));
+                    }else{
+                        scanDevice();
+                    }
                     return;
 //                    Log.e("socket","close");
                 } catch (IOException ee) {
@@ -229,7 +234,7 @@ public class Bluetooth {
             mSocket=socket;
             InputStream tempInput=null;
             OutputStream tempOutput=null;
-            LoginActivity.isConnected=true;
+//            LoginActivity.isConnected=true;
 
             try {
                 tempInput=socket.getInputStream();
@@ -245,12 +250,7 @@ public class Bluetooth {
         @Override
         public void run() {
             byte[] buffer = new byte[1024];
-            //Arrays.fill(buffer, (byte)0x00);
             int bytes;
-
-        //    byte[] buffer_b = new byte[1024];
-        //    Arrays.fill(buffer_b, (byte)0x00);
-        //    int position=0;
 
             while (true)
             {
@@ -292,24 +292,36 @@ public class Bluetooth {
         mHandler = h;
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        preferences =mActivity. getSharedPreferences("info",0);
+        editor = preferences.edit();
+    }
+
+    public Bluetooth(){
+
     }
 
     public void enableBluetooth(String type)
     {
 
+
         if (type.equals("auto")){
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            mActivity.startActivityForResult(intent,REQUEST_AUTO_ENABLE_BT);
+            Log.e("??","hi");
+            autoPairing(preferences.getString("address","none"));
+//            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            mActivity.startActivityForResult(intent,REQUEST_AUTO_ENABLE_BT);
         }else{
             if(bluetoothAdapter.isEnabled())
             {
-//            Toast.makeText(mActivity.getApplicationContext(),"블루투스 활성화상태 입니다.", Toast.LENGTH_LONG).show();
-
-                scanDevice();
+                Log.e("??","bluetoothAdapter isEnabled");
+                if (!preferences.getString("address","none").equals("none")){
+                    autoPairing(preferences.getString("address","none"));
+                }else{
+                    scanDevice();
+                }
             }
             else {
-                Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                mActivity.startActivityForResult(intent,REQUEST_ENABLE_BT);
+                Log.e("??","들어옴");
+                scanDevice();
             }
 
         }
@@ -322,32 +334,23 @@ public class Bluetooth {
         mActivity.startActivityForResult(intent,REQUEST_CONNECT_DEVICE);
     }
 
+
     public void getDeviceInfo(Intent data)
     {
 
 
         String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
         // Get the BluetoothDevice object
-
-
-//        if (preferences.getString("address","none").equals("none")){
-            BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
-            connect(device);
-//        }
+        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
+        connect(device);
 
         setAddress(address);
-
-        // Get the device MAC address
 
 
         Log.e("device",address);
 
-
-
-        //bluetoothAdapter.getBondedDevices().
-
-
     }
+
 
     public void autoPairing(String mac_add){
         Log.e("자동 연결","ㅎㅎ");
@@ -356,11 +359,6 @@ public class Bluetooth {
 
         connect(device);
 
-
-//        byte[] buffer = null;
-//        String str = "c";
-//        buffer = str.getBytes();
-//        write(buffer);
     }
 
     public void cancelBluetooth(){

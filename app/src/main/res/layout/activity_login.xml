@@ -139,17 +139,50 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="16"></LinearLayout>
+
+        <LinearLayout
             android:id="@+id/touch_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="102"
+            android:layout_weight="86"
             android:orientation="vertical"
-            android:weightSum="102"
-            android:gravity="center"
+            android:weightSum="86"
+
             android:layout_gravity="center">
 
+            <LinearLayout
+                android:id="@+id/no_exist_device_linear"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="0"
+                android:weightSum="720">
 
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="150"></View>
 
+                <TextView
+                    android:id="@+id/no_exist_device_text"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="570"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:text="존재하지 않는 기기번호입니다."
+                    android:textColor="#b4211b"></TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/empty_view1"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0"></LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -196,6 +229,12 @@
         </LinearLayout>
 
 
+        <LinearLayout
+            android:id="@+id/button_top_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="0"></LinearLayout>
 
 
         <LinearLayout
@@ -224,7 +263,8 @@
                     android:layout_height="0dp"
                     android:layout_weight="80"
                     android:background="@drawable/login_btn"
-                    android:elevation="10dp"></androidx.appcompat.widget.AppCompatButton>
+                    android:elevation="10dp"
+                    android:enabled="false"></androidx.appcompat.widget.AppCompatButton>
 
             </LinearLayout>
 

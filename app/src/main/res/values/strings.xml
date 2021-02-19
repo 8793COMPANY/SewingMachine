@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SewingMachine</string>
+    <string name="app_name">큐브 미싱기</string>
 
 
     <string name="action_connect">Connect</string>
