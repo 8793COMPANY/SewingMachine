@@ -163,56 +163,36 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:weightSum="720"
-        android:layout_weight="624">
-
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="48"></View>
+        android:layout_weight="624"
+        android:gravity="center">
 
         <!-- 캔버스 -->
-        <ScrollView
-            android:id="@+id/pll1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/scroll_view_border"
-            android:padding="1dp"
-            android:layout_weight="624">
+        <LinearLayout
+            android:id="@+id/paper_line_2ar_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="1dp"
+            android:paddingBottom="1dp"
+            android:background="@android:color/darker_gray"
+            android:orientation="vertical">
 
-            <HorizontalScrollView
-                android:id="@+id/pll2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <include layout="@layout/paper_line_2" />
+            <include layout="@layout/paper_line_2" />
+            <include layout="@layout/paper_line_2" />
+            <include layout="@layout/paper_line_2" />
 
-                <LinearLayout
-                    android:id="@+id/paper_linear_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray"
-                    android:orientation="vertical">
+            <include layout="@layout/paper_line_2" />
+            <include layout="@layout/paper_line_2" />
+            <include layout="@layout/paper_line_2" />
+            <include layout="@layout/paper_line_2" />
 
-                    <include layout="@layout/paper_line" />
-                    <include layout="@layout/paper_line" />
-                    <include layout="@layout/paper_line" />
-                    <include layout="@layout/paper_line" />
+            <include layout="@layout/paper_line_2" />
+            <include layout="@layout/paper_line_2" />
+            <include layout="@layout/paper_line_2" />
+            <include layout="@layout/paper_line_2" />
 
-                    <include layout="@layout/paper_line" />
-                    <include layout="@layout/paper_line" />
-                    <include layout="@layout/paper_line" />
-                    <include layout="@layout/paper_line" />
-
-                    <include layout="@layout/paper_line" />
-                    <include layout="@layout/paper_line" />
-                    <include layout="@layout/paper_line" />
-                    <include layout="@layout/paper_line" />
-
-                    <include layout="@layout/paper_line" />
-                </LinearLayout>
-
-            </HorizontalScrollView>
-
-        </ScrollView>
+            <include layout="@layout/paper_line_2" />
+        </LinearLayout>
 
     </LinearLayout>
 

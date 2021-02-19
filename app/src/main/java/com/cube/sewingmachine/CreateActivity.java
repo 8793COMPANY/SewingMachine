@@ -147,7 +147,7 @@ public class CreateActivity extends AppCompatActivity {
 
         // 비트맵 데이터 전처리
         Bitmap tempBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565);
-        tempBitmap.eraseColor(0xFFBDBDBD);
+        tempBitmap.eraseColor(0xFFF4F4F4);
 
         Bitmap bMap;
 
@@ -193,7 +193,7 @@ public class CreateActivity extends AppCompatActivity {
                 throw new IOException();
             }
 
-            LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
+            LinearLayout linearLayout = findViewById(R.id.paper_line_2ar_layout);
 
             for (int i = 0; i < x; i++) {
                 for (int j = 0; j < y; j++) {
@@ -231,7 +231,7 @@ public class CreateActivity extends AppCompatActivity {
 
     // TODO : 미니맵 갱신 함수
     private void updateDrawerHeader() {
-        View view = findViewById(R.id.paper_linear_layout);
+        View view = findViewById(R.id.paper_line_2ar_layout);
         Bitmap bitmap;
 
         if (view.getWidth() > 0 && view.getHeight() > 0) {
@@ -252,7 +252,7 @@ public class CreateActivity extends AppCompatActivity {
 
     //Initializes the "pixels" (basically sets OnLongClickListener on them)
     private void initPixels() {
-        LinearLayout paper = findViewById(R.id.paper_linear_layout);
+        LinearLayout paper = findViewById(R.id.paper_line_2ar_layout);
 
         for (int i = 0; i < paper.getChildCount(); i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
@@ -263,9 +263,9 @@ public class CreateActivity extends AppCompatActivity {
         }
     }
 
-    //Shows or hides the pixels boundaries from the paper_linear_layout
+    //Shows or hides the pixels boundaries from the paper_line_2ar_layout
     private void pixelGrid(boolean onOff) {
-        LinearLayout paper = findViewById(R.id.paper_linear_layout);
+        LinearLayout paper = findViewById(R.id.paper_line_2ar_layout);
 
         int x;
         int y;
@@ -293,9 +293,9 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     // TODO : 캔버스 색상리셋(초기화) 함수
-    //Fills paper_linear_layout with chosen color
+    //Fills paper_line_2ar_layout with chosen color
     private void fillScreen(int color) {
-        LinearLayout paper = findViewById(R.id.paper_linear_layout);
+        LinearLayout paper = findViewById(R.id.paper_line_2ar_layout);
 
         for (int i = 0; i < paper.getChildCount(); i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
@@ -310,7 +310,7 @@ public class CreateActivity extends AppCompatActivity {
 
     // TODO : 캔버스 디테일 색칠 함수
     private void fillScreen_detail(int color, int i, int j) {
-        LinearLayout paper = findViewById(R.id.paper_linear_layout);
+        LinearLayout paper = findViewById(R.id.paper_line_2ar_layout);
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
             View pixel = l.getChildAt(j);
             pixel.setBackgroundColor(color);
@@ -353,7 +353,7 @@ public class CreateActivity extends AppCompatActivity {
 
 
 
-            LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
+            LinearLayout linearLayout = findViewById(R.id.paper_line_2ar_layout);
 
             for (int i = 0; i < x; i++) {
                 for (int j = 0; j < y; j++) {
