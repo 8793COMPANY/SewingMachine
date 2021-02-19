@@ -79,7 +79,7 @@ public class EmbroideryActivity extends AppCompatActivity {
 
         // 비트맵 데이터 전처리
         Bitmap tempBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565);
-        tempBitmap.eraseColor(0xFFBDBDBD);
+        tempBitmap.eraseColor(0xFFF4F4F4);
 
         dataSet = new Bitmap[]{
                 tempBitmap,

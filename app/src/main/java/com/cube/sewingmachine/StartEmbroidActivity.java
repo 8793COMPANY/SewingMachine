@@ -184,6 +184,8 @@ public class StartEmbroidActivity extends AppCompatActivity {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(StartEmbroidActivity.this, EmbroideryActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -204,7 +206,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
 
             // 비트맵 데이터 전처리
             Bitmap tempBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565);
-            tempBitmap.eraseColor(0xFFBDBDBD);
+            tempBitmap.eraseColor(0xFFF4F4F4);
 
             Bitmap bMap;
 
