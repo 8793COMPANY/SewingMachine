@@ -105,6 +105,7 @@ public class CreateActivity extends AppCompatActivity {
                 start_btn.setBackgroundResource(R.drawable.embroid_start_off_btn);
                 start_btn.setEnabled(false);
                 stop_btn.setBackgroundResource(R.drawable.embroid_stop_btn);
+                stop_btn.setEnabled(true);
             }
         });
 
@@ -114,6 +115,8 @@ public class CreateActivity extends AppCompatActivity {
                 start_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Log.e("hi","정지");
+                        handler.sendEmptyMessage(4);
                         start_btn.setBackgroundResource(R.drawable.embroid_start_btn);
                         start_btn.setEnabled(true);
                         stop_btn.setBackgroundResource(R.drawable.embroid_stop_off_btn);

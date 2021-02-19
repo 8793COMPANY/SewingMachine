@@ -14,6 +14,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -24,7 +25,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,6 +37,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
@@ -134,7 +139,19 @@ public class StartEmbroidActivity extends AppCompatActivity {
         factory_reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 factory_reset_dialog.show();
+
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+
+                Window window = factory_reset_dialog.getWindow();
+
+                int x = (int)(size.x *0.85f);
+                int y = (int)(size.y *0.27f);
+
+                window.setLayout(x,y);
             }
         });
 
@@ -253,6 +270,7 @@ public class StartEmbroidActivity extends AppCompatActivity {
         builder.setView(dialogView);
 
         factory_reset_dialog = builder.create();
+
     }
 
     @Override

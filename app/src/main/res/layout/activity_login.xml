@@ -240,7 +240,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="100"
+            android:layout_weight="118"
             android:orientation="horizontal"
             android:weightSum="720">
 
@@ -250,11 +250,12 @@
                 android:layout_weight="130"></View>
 
             <LinearLayout
+                android:id="@+id/login_btn_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="460"
                 android:orientation="vertical"
-                android:weightSum="90"
+                android:weightSum="118"
                 >
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -262,8 +263,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="80"
-                    android:background="@drawable/login_btn"
-                    android:elevation="10dp"
+                    android:background="@drawable/login_btn_off"
                     android:enabled="false"></androidx.appcompat.widget.AppCompatButton>
 
             </LinearLayout>
@@ -279,7 +279,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="450"></LinearLayout>
+            android:layout_weight="424"></LinearLayout>
 
     </LinearLayout>
 

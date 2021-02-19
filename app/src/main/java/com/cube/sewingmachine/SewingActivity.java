@@ -17,9 +17,9 @@ import java.util.ArrayList;
 
 public class SewingActivity extends AppCompatActivity {
 
-    int [] image_list = {R.drawable.sewing_one_image, R.drawable.sewing_two_image, R.drawable.sewing_three_image, R.drawable.sewing_four_image, R.drawable.sewing_five_image};
-    int [] image_list_on = {R.drawable.sewing_one_image_on, R.drawable.sewing_two_image_on, R.drawable.sewing_three_image_on, R.drawable.sewing_four_image_on, R.drawable.sewing_five_image_on};
-    int [] sewing_text_box_image = {R.drawable.sewing_one_text,R.drawable.sewing_two_text,R.drawable.sewing_three_text,R.drawable.sewing_four_text,R.drawable.sewing_five_text};
+    int [] image_list ={R.drawable.sewing_one_image,R.drawable.sewing_three_image, R.drawable.sewing_five_image,  R.drawable.sewing_four_image, R.drawable.sewing_two_image};
+    int [] image_list_on = {R.drawable.sewing_one_image_on,R.drawable.sewing_three_image_on, R.drawable.sewing_five_image_on,  R.drawable.sewing_four_image_on, R.drawable.sewing_two_image_on};
+    int [] sewing_text_box_image = {R.drawable.sewing_one_text,R.drawable.sewing_three_text,R.drawable.sewing_five_text,R.drawable.sewing_four_text,R.drawable.sewing_two_text};
     Button back_btn, finish_btn;
     ImageView sewing_text_box;
     int pos= 0;

@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Button login_btn,auto_login_btn,input_cancel_btn;
     EditText device_input;
+    LinearLayout login_btn_back;
     boolean check = false;
 
     private SharedPreferences preferences;
@@ -75,9 +76,12 @@ public class LoginActivity extends AppCompatActivity {
         empty_view1 = findViewById(R.id.empty_view1);
         button_top_empty_view = findViewById(R.id.button_top_empty_view);
 
+        login_btn_back = findViewById(R.id.login_btn_back);
+
         if (preferences.getBoolean("auto_login",false)){
             device_input.setText(preferences.getString("id","hello"));
             auto_login_btn.setBackgroundResource(R.drawable.auto_login_btn_on);
+            check = true;
         }
 
         final View parent = (View) findViewById(R.id.touch_layout).getParent();
@@ -228,6 +232,8 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("BT", "disconnect");
                     Toast.makeText(getApplicationContext(), "블루투스연결이 해제되었습니다.", Toast.LENGTH_SHORT).show();
                     Log.e("hello",bluetooth.getState()+"");
+                    login_btn_back.setBackgroundResource(0);
+                    login_btn.setBackgroundResource(R.drawable.login_btn_off);
                     bluetooth.enableBluetooth("connect");
                     break;
                 case 2:
@@ -239,6 +245,8 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "블루투스가 연결되었습니다.", Toast.LENGTH_SHORT).show();
                     Log.e("hello",bluetooth.getState()+"");
                     login_btn.setEnabled(true);
+                    login_btn_back.setBackgroundResource(R.drawable.login_btn_back);
+                    login_btn.setBackgroundResource(R.drawable.login_btn);
 
                     if (preferences.getString("address","none").equals("none")){
                         editor.putString("address", bluetooth.getAddress());
