@@ -165,7 +165,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="230"
-                    android:background="@drawable/device_connect_cancel_btn"
+                    android:background="@drawable/device_connect_btn"
                     ></androidx.appcompat.widget.AppCompatButton>
 
 
@@ -204,16 +204,16 @@
                         android:layout_height="0dp"
                         android:layout_weight="22"></View>
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
+                        style="@style/SwitchCompatStyle"
                         android:id="@+id/auto_login_switch"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="44"
-                        android:thumb="@drawable/switch_thumb"
                         android:switchMinWidth="0dp"
                         android:textOff=""
                         android:textOn=""
-                        android:thumbTextPadding="15dp"></Switch>
+                        android:thumbTextPadding="15dp"></androidx.appcompat.widget.SwitchCompat>
 
 
                     <View
@@ -260,17 +260,17 @@
                         android:layout_height="0dp"
                         android:layout_weight="22"></View>
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
+                        style="@style/SwitchCompatStyle"
                         android:id="@+id/bluetooth_switch"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="44"
-                        android:thumb="@drawable/switch_thumb"
                         android:switchMinWidth="0dp"
                         android:textOff=""
                         android:textOn=""
                         android:thumbTextPadding="15dp"
-                        ></Switch>
+                        ></androidx.appcompat.widget.SwitchCompat>
 
 
                     <View

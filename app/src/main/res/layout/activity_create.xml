@@ -73,41 +73,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="124"
+        android:layout_weight="44"
         android:orientation="horizontal"
         android:weightSum="720">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="298"></View>
-
-        <ImageView
-
-            android:id="@+id/mini_map"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="124"
-            android:background="#e2e2e2">
-
-        </ImageView>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="298"></View>
     </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="32"></LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="44"
+        android:layout_weight="46"
         android:gravity="center">
         <TextView
             android:id="@+id/textview"
@@ -124,13 +101,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="28"></LinearLayout>
+        android:layout_weight="34"></LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="18"
+        android:layout_weight="20"
         android:orientation="horizontal"
         android:weightSum="720">
 
@@ -156,7 +133,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="42"></LinearLayout>
+        android:layout_weight="66"></LinearLayout>
 
 
     <LinearLayout
@@ -199,7 +176,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="48"></LinearLayout>
+        android:layout_weight="68"></LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -231,7 +208,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="20"></LinearLayout>
+        android:layout_weight="28"></LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -264,5 +241,5 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="42"></LinearLayout>
+        android:layout_weight="92"></LinearLayout>
 </LinearLayout>

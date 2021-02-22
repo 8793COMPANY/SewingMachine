@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -21,12 +22,13 @@ public class SettingActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
 
-    Switch auto_login_switch, bluetooth_switch;
+    SwitchCompat auto_login_switch , bluetooth_switch;
 
     SeekBar speed_seekbar, prepare_time_seekbar;
 
     TextView device_num;
 
+    boolean bluetooth_check = false, login_check = false, device_connect_check = false;
 
 
     @Override
@@ -49,14 +51,19 @@ public class SettingActivity extends AppCompatActivity {
 
         device_num.setText(preferences.getString("id","none"));
 
+
         if (preferences.getBoolean("auto_login",false)){
             auto_login_switch.setChecked(true);
-
+            login_check = true;
         }
 
         if (preferences.getBoolean("pairing",false)){
             bluetooth_switch.setChecked(true);
+            bluetooth_check = true;
         }
+
+        setDeviceConnectBtn();
+
 
         speed_seekbar.setProgress(preferences.getInt("speed",0));
 
@@ -65,11 +72,22 @@ public class SettingActivity extends AppCompatActivity {
         device_connect_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editor.remove("address");
-                editor.commit();
-                Toast.makeText(getApplicationContext(),"기기 연결이 해제되었습니다.",Toast.LENGTH_SHORT).show();
-                auto_login_switch.setChecked(false);
-                bluetooth_switch.setChecked(false);
+                Log.e("??","므여");
+                device_connect_cancel.setBackgroundResource(R.drawable.login_btn_off);
+
+                if (device_connect_check){
+                    Toast.makeText(getApplicationContext(),"기기 연결이 해제되었습니다.",Toast.LENGTH_SHORT).show();
+                    device_connect_cancel.setBackgroundResource(R.drawable.device_connect_btn);
+
+                    auto_login_switch.setChecked(false);
+                    bluetooth_switch.setChecked(false);
+                    device_connect_check = false;
+                }else{
+                    device_connect_cancel.setBackgroundResource(R.drawable.device_connect_cancel_btn);
+                    auto_login_switch.setChecked(true);
+                    bluetooth_switch.setChecked(true);
+                    device_connect_check = true;
+                }
             }
         });
 
@@ -83,6 +101,11 @@ public class SettingActivity extends AppCompatActivity {
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!bluetooth_check)
+                    editor.remove("address");
+
+                if (!login_check)
+                    editor.remove("id");
                 editor.apply();
                 finish();
             }
@@ -91,12 +114,20 @@ public class SettingActivity extends AppCompatActivity {
         bluetooth_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                bluetooth_check = isChecked;
+//                setDeviceConnectBtn();
                 if (isChecked){
                     editor.putBoolean("pairing",true);
+                    setDeviceConnectBtn();
                 }else{
-                    editor.remove("address");
+//                    editor.remove("address");
                     editor.putBoolean("pairing",false);
+                    if ((!login_check) && (!bluetooth_check)){
+                        device_connect_cancel.setBackgroundResource(R.drawable.device_connect_btn);
+                        device_connect_check = true;
+                    }
                 }
+
 //                editor.apply();
             }
         });
@@ -104,11 +135,17 @@ public class SettingActivity extends AppCompatActivity {
         auto_login_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                login_check = isChecked;
+//                setDeviceConnectBtn();
                 if (isChecked){
                     editor.putBoolean("auto_login",true);
+                    setDeviceConnectBtn();
                 }else{
-                    editor.remove("id");
                     editor.putBoolean("auto_login",false);
+                    if ((!login_check) && (!bluetooth_check)){
+                        device_connect_cancel.setBackgroundResource(R.drawable.device_connect_btn);
+                        device_connect_check = true;
+                    }
                 }
 //                editor.apply();
             }
@@ -152,4 +189,13 @@ public class SettingActivity extends AppCompatActivity {
 
 
     }
+
+    void setDeviceConnectBtn(){
+        Log.e("hi","gg");
+        if (login_check || bluetooth_check){
+            device_connect_cancel.setBackgroundResource(R.drawable.device_connect_cancel_btn);
+            device_connect_check = true;
+        }
+    }
+
 }

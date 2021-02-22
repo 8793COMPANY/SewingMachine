@@ -130,6 +130,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="672"
+            android:paddingRight="20dp"
+            android:clipToPadding="false"
             android:scrollbars="horizontal"></androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
@@ -273,7 +275,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="476"
-            android:background="@drawable/sewing_start_btn_on"></androidx.appcompat.widget.AppCompatButton>
+            android:background="@drawable/sewing_start_btn_off"></androidx.appcompat.widget.AppCompatButton>
 
 
 

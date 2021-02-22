@@ -112,16 +112,13 @@ public class CreateActivity extends AppCompatActivity {
         stop_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+
                         Log.e("hi","정지");
                         handler.sendEmptyMessage(4);
                         start_btn.setBackgroundResource(R.drawable.embroid_start_btn);
                         start_btn.setEnabled(true);
                         stop_btn.setBackgroundResource(R.drawable.embroid_stop_off_btn);
-                    }
-                });
+
             }
         });
 
@@ -149,22 +146,22 @@ public class CreateActivity extends AppCompatActivity {
         Bitmap tempBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565);
         tempBitmap.eraseColor(0xFFF4F4F4);
 
-        Bitmap bMap;
+//        Bitmap bMap;
+//
+//        if(openFile.exists()) {
+//            Uri uri = Uri.fromFile(openFile);
+//            try {
+//                bMap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+//            } catch (IOException e) {
+//                bMap = tempBitmap;
+//                e.printStackTrace();
+//            }
+//        } else {
+//            bMap = tempBitmap;
+//        }
 
-        if(openFile.exists()) {
-            Uri uri = Uri.fromFile(openFile);
-            try {
-                bMap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            } catch (IOException e) {
-                bMap = tempBitmap;
-                e.printStackTrace();
-            }
-        } else {
-            bMap = tempBitmap;
-        }
-
-        ImageView mini_map = findViewById(R.id.mini_map);
-        mini_map.setImageBitmap(bMap);
+//        ImageView mini_map = findViewById(R.id.mini_map);
+//        mini_map.setImageBitmap(bMap);
 
         readyStreamFile(pa_index + ".pixel_artist");
     }

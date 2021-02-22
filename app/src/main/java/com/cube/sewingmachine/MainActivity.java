@@ -1,18 +1,25 @@
 package com.cube.sewingmachine;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
@@ -37,12 +44,15 @@ public class MainActivity extends AppCompatActivity {
 
     WormDotsIndicator wormDotsIndicator;
 
+
+    AlertDialog finish_dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        initDialog();
         wormDotsIndicator = findViewById(R.id.worm_dots_indicator);
         start_embroid_btn = findViewById(R.id.start_embroidery);
         start_sewing_btn = findViewById(R.id.start_sewing);
@@ -188,5 +198,54 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void initDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_factory_finish, null);
+        LinearLayout cancel_btn, finish_btn;
+
+        cancel_btn = dialogView.findViewById(R.id.cancel_btn);
+        finish_btn = dialogView.findViewById(R.id.finish_btn);
+
+        cancel_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish_dialog.dismiss();
+            }
+        });
+
+        finish_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish_dialog.dismiss();
+                finish();
+            }
+        });
+
+        builder.setView(dialogView);
+
+        finish_dialog = builder.create();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        finish_dialog.show();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        Window window = finish_dialog.getWindow();
+
+        int x = (int)(size.x *0.85f);
+        int y = (int)(size.y *0.27f);
+
+        window.setLayout(x,y);
+    }
+
+
 
 }

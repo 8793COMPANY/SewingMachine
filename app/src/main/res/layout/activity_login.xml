@@ -141,7 +141,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="16"></LinearLayout>
+            android:layout_weight="18"></LinearLayout>
 
         <LinearLayout
             android:id="@+id/touch_layout"
@@ -150,7 +150,6 @@
             android:layout_weight="86"
             android:orientation="vertical"
             android:weightSum="86"
-
             android:layout_gravity="center">
 
             <LinearLayout
@@ -187,7 +186,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="34"
+                android:layout_weight="46"
                 android:orientation="horizontal"
                 android:weightSum="720"
 
@@ -196,25 +195,16 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="148"></View>
+                    android:layout_weight="136"></View>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/auto_login_btn"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="30"
+                    android:layout_weight="180"
                     android:background="@drawable/auto_login_btn_off"></androidx.appcompat.widget.AppCompatButton>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="14"></View>
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="124"
-                    android:background="@drawable/auto_login_text"></ImageView>
 
                 <View
                     android:layout_width="0dp"

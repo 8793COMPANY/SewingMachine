@@ -31,4 +31,9 @@
     <style name="CustomAppTheme" parent="Theme.AppCompat">
         <item name="colorAccent">#e91e63</item>
     </style>
+
+    <style name="SwitchCompatStyle">
+        <item name="android:thumb">@drawable/switch_thumb</item>
+        <item name="trackTint">@color/switch_color</item>
+    </style>
 </resources>

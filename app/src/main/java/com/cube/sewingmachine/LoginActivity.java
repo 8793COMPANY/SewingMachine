@@ -114,8 +114,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             auto_login_btn.setBackgroundResource(R.drawable.auto_login_btn_on);
                             check=true;
-                            editor.putBoolean("auto_login",true);
-                            editor.apply();
+
                         }
                     }
                 });
@@ -166,6 +165,8 @@ public class LoginActivity extends AppCompatActivity {
                 String id = device_input.getText().toString().trim();
                 if (!id.equals("")){
                     editor.putString("id",id);
+                    if (check)
+                        editor.putBoolean("auto_login",true);
                     editor.apply();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);

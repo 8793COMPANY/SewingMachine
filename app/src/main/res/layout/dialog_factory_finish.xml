@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="240"
+    android:background="@drawable/finish_popup_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="146"></LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="64"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="500">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="46"/>
+
+        <LinearLayout
+            android:id="@+id/cancel_btn"
+            android:layout_width="0dp"
+            android:layout_weight="190"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="@drawable/finish_popup_cancel_btn" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="28"/>
+
+        <LinearLayout
+            android:id="@+id/finish_btn"
+            android:layout_width="0dp"
+            android:layout_weight="190"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="@drawable/finish_popup_finish_btn" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="46"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="30"></LinearLayout>
+
+</LinearLayout>

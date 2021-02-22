@@ -45,7 +45,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1018"
+        android:layout_weight="1016"
         android:orientation="horizontal"
         android:weightSum="720">
 
@@ -91,42 +91,60 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="130"
-        android:elevation="10dp"
-        android:orientation="horizontal"
-        android:weightSum="720">
+        android:layout_weight="134"
+        android:orientation="vertical"
+        android:weightSum="134"
+        android:gravity="bottom"
+        android:layout_gravity="bottom">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="38"></View>
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="4"-->
+<!--            android:background="#BFf2f2f2"></View>-->
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/create_btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="208"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="130"
+            android:weightSum="720"
+            android:background="#ffffff"
+            android:elevation="10dp"
+            android:orientation="horizontal">
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="38"></View>
 
-            android:background="@drawable/create_new_btn"></androidx.appcompat.widget.AppCompatButton>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/create_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="208"
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/modify_btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="208"
-            android:background="@drawable/modify_btn"></androidx.appcompat.widget.AppCompatButton>
+                android:background="@drawable/create_new_btn"></androidx.appcompat.widget.AppCompatButton>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/start_btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="208"
-            android:background="@drawable/embroid_start_page_btn"></androidx.appcompat.widget.AppCompatButton>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/modify_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="208"
+                android:background="@drawable/modify_btn"></androidx.appcompat.widget.AppCompatButton>
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="38"></View>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/start_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="208"
+                android:background="@drawable/embroid_start_page_btn"></androidx.appcompat.widget.AppCompatButton>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="38"></View>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
