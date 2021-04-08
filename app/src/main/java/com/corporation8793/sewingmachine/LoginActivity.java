@@ -1,7 +1,6 @@
-package com.cube.sewingmachine;
+package com.corporation8793.sewingmachine;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;

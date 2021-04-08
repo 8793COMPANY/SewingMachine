@@ -1,4 +1,4 @@
-package com.cube.sewingmachine;
+package com.corporation8793.sewingmachine;
 
 import android.content.Context;
 import android.util.Log;

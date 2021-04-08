@@ -1,4 +1,4 @@
-package com.cube.sewingmachine;
+package com.corporation8793.sewingmachine;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,7 +6,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
@@ -26,7 +25,7 @@ import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import java.util.Calendar;
 
-import static com.cube.sewingmachine.LoginActivity.bluetooth;
+import static com.corporation8793.sewingmachine.LoginActivity.bluetooth;
 
 
 

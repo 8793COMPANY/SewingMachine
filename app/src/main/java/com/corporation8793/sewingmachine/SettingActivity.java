@@ -1,4 +1,4 @@
-package com.cube.sewingmachine;
+package com.corporation8793.sewingmachine;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,11 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 

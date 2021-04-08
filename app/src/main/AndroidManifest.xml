@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cube.sewingmachine">
+    package="com.corporation8793.sewingmachine">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -19,14 +19,14 @@
         android:theme="@style/Theme.SewingMachine">
         <activity
             android:theme="@style/Theme.SewingMachine.old"
-            android:name=".StartEmbroidActivity"/>
-        <activity android:name=".MainActivity">
+            android:name="com.corporation8793.sewingmachine.StartEmbroidActivity"/>
+        <activity android:name="com.corporation8793.sewingmachine.MainActivity">
         </activity>
-        <activity android:name=".DeviceListActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name="com.corporation8793.sewingmachine.DeviceListActivity" />
+        <activity android:name="com.corporation8793.sewingmachine.LoginActivity">
 
         </activity>
-        <activity android:name=".SplashScreen">
+        <activity android:name="com.corporation8793.sewingmachine.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,10 +34,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EmbroideryActivity" />
-        <activity android:name=".CreateActivity" />
-        <activity android:name=".SewingActivity" />
-        <activity android:name=".SettingActivity" />
+            android:name="com.corporation8793.sewingmachine.EmbroideryActivity" />
+        <activity android:name="com.corporation8793.sewingmachine.CreateActivity" />
+        <activity android:name="com.corporation8793.sewingmachine.SewingActivity" />
+        <activity android:name="com.corporation8793.sewingmachine.SettingActivity" />
     </application>
 
 </manifest>

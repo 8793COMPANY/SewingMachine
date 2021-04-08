@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.cube.sewingmachine"
+        applicationId "com.corporation8793.sewingmachine"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1

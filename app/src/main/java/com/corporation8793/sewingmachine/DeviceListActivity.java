@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cube.sewingmachine;
+package com.corporation8793.sewingmachine;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
